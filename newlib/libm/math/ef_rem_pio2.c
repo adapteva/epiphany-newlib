@@ -1,5 +1,6 @@
 /* ef_rem_pio2.c -- float version of e_rem_pio2.c
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
+ * Use __uint8_t for array Joern Rennecke, Embecosm.
  */
 
 /*
@@ -26,9 +27,9 @@
  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi 
  */
 #ifdef __STDC__
-static const __int32_t two_over_pi[] = {
+static const __uint8_t two_over_pi[] = {
 #else
-static __int32_t two_over_pi[] = {
+static __uint8_t two_over_pi[] = {
 #endif
 0xA2, 0xF9, 0x83, 0x6E, 0x4E, 0x44, 0x15, 0x29, 0xFC,
 0x27, 0x57, 0xD1, 0xF5, 0x34, 0xDD, 0xC0, 0xDB, 0x62, 

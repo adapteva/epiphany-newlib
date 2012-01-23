@@ -1,6 +1,6 @@
 /* Adapteva epiphany-core implementation of stdio support functions ()
 
-   Copyright (c) 2011, 2012 Adapteva, Inc.
+   Copyright (c) 2011, Adapteva, Inc.
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
@@ -27,6 +27,8 @@
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
 #include <errno.h>
+#undef errno
+extern int errno;
 
 /* simple include interface to EPIPHANY trap instruction. */
 

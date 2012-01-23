@@ -1,6 +1,6 @@
 /* EPIPHANY implementation of _stat ()
 
-   Copyright (c) 2011, 2012 Adapteva, Inc.
+   Copyright (c) 2011, Adapteva, Inc.
    All rights reserved.
 
    Contributor Joern Rennecke <joern.rennecke@embecosm.com> for Adapteva Inc.
@@ -28,7 +28,11 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
+/* Work around Red Hat way of doing errno as a macro */
 #include <errno.h>
+#undef errno
+extern int errno;
+
 #include <sys/time.h>
 #include "syscall.h"
 

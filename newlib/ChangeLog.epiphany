@@ -1,0 +1,147 @@
+2012-01-19  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* libc/machine/epiphany/access.c: Move to libgloss.
+	* libc/machine/epiphany/one_cmplsi2.S: Delete.
+	* libc/machine/epiphany/Makefile.am (lib_a_SOURCES): Remove access.c
+	and one_cmplsi2.S.
+	* libc/machine/epiphany/Makefile.in: Regenerate.
+	* libc/machine/epiphany/aclocal.m4: Regenerate.
+	* libc/machine/epiphany/Makefile.in: Regenerate.
+	* libc/machine/epiphany/machine/endian.h: Delete.
+	* libc/machine/epiphany/machine/epiphany_config.h: Move to libgloss.
+	* libc/machine/epiphany/machine/param.h: Delete.
+	* libc/sys/epiphany/isatty.c: Delete (use newlib/posix one).
+	* libc/sys/epiphany/mem-layout.c, ___crt0.old.S: Delete.
+	* libc/sys/epiphany/Makefile.am (lib_a_sources): Remove isatty.c
+	and mem-layout.c .  Add e_printf.c .
+	* libc/sys/epiphany/configure.in (AC_CONFIG_SRCDIR): Use e_printf.c.
+	* libc/sys/epiphany/configure: Regenerate.
+	* libc/sys/epiphany/aclocal.m4: Regenerate.
+	* libc/sys/epiphany/Makefile.in: Regenerate.
+
+2011-11-19  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* libc/machine/epiphany/machine/stdlib.h: New file.
+
+2011-11-17  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* libc/machine/configure, libc/sys/configure: Regenerate.
+
+2011-11-02  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* libc/machine/epiphany/setjmp.S,
+	* libc/machine/epiphany/machine/endian.h,
+	* libc/machine/epiphany/machine/param.h,
+	* libc/machine/epiphany/machine/epiphany_config.h,
+	* libc/machine/epiphany/configure.in,
+	* libc/machine/epiphany/Makefile.am,
+	* libc/machine/epiphany/one_cmplsi2.S,
+	* libc/machine/configure.in,
+	* libc/sys/epiphany/sbrk.c,
+	* libc/sys/epiphany/___crt0.oldS,
+	* libc/sys/epiphany/configure.in,
+	* libc/sys/epiphany/e_printf.c,
+	* libc/sys/epiphany/Makefile.am,
+	* libc/sys/epiphany/mem-layout.c,
+	* libc/sys/epiphany/isatty.c,
+	* libc/sys/configure.in:  Added BSD 3-clause license header.
+
+2011-10-18  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/machine/epiphany/setjmp.S: Update for new ABI.
+
+2011-08-30  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/stdlib/mprec.h (Bcopy): Use offsetof.
+
+2011-08-28  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/stdio/vfprintf.c (_VFPRINTF_R): Eliminate decimal_point hack.
+
+2011-08-21  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/sys/epiphany/sbrk.c (_sbrk): Don't trap on error.
+
+2011-07-28  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/include/machine/setjmp.h [__epiphany__] (_JBTYPE): Now long long.
+	* libc/machine/epiphany/setjmp.S (_setjmp, _longjmp): Save / restore
+	new call saved registers.
+
+2011-07-25  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/sys/configure.in: Add epiphany support.
+	* libc/sys/configure: Regenerate.
+	* libc/machine/configure, configure: Likewise.
+
+2011-07-21  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/sys/epiphany/sbrk.c (_sbrk): Change special symbol names to be
+	outside of user namespace.
+
+2011-06-23  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	Noted for the record, not by the author, date estimated.
+
+	* libc/machine/epiphany/machine/epiphany_config.h,
+	* libc/sys/epiphany/e_printf.c: Created.
+	* libc/sys/epiphany/___crt0.oldS. Created from crt0.S.
+	* libc/sys/epiphany/crt0.S, libc/sys/epiphany/old: Deleted.
+	* newlib/configure, newlib/Makefile.in, newlib/libm/math/qqqq,
+	* newlib/libm/math/ttt, newlib/libc/machine/configure,
+	* newlib/libc/sys/configure: Regenerated.
+
+2010-03-21  Alan Lehotsky <apl@alum.mit.edu>
+
+	* libc/machine/epiphany/setjmp.S: make _setjmp/_longjmp global.
+
+2010-03-05  Alan Lehotsky <apl@alum.mit.edu>
+
+	* /libc/include/machine/ieeefp.h (Sudden_Underflow): define true,
+	* libgloss/epiphany/epiphany-sim.h: define inline asm functions for
+	  basic i/o.
+
+2009-10-19  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	Noted for the record, not by the author, date estimated.
+
+	* newlib/libc/machine/epiphany, newlib/libc/sys/epiphany:
+	Directories replace corresponding atdsp directories.
+	* newlib/configure.host, newlib/libc/include/machine/ieeefp.h,
+	* newlib/libc/include/machine/setjmp.h,
+	* newlib/libc/machine/configure.in,
+	* newlib/libc/machine/epiphany/machine/endian.h,
+	* newlib/libc/machine/epiphany/Makefile.in,
+	* newlib/libc/machine/epiphany/setjmp.S, newlib/libc/stdio/vfprintf.c,
+	* newlib/libc/sys/epiphany/Makefile.in,
+	* newlib/libc/sys/epiphany/mem-layout.c,
+	* newlib/libc/sys/epiphany/sbrk.c,
+	* newlib/libc/sys/epiphany.x/trap.S: All refererences to atdsp
+	replaced by epiphany.
+
+2009-10-01  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* configure.host (atdsp-*-*): Set have_crt0 to "no".
+	* libc/sys/atdsp/Makefile.am (EXTRA_lib_a_SOURCES): Delete.
+	(all): Don't depend on crt0.o.
+	* libc/sys/atdsp/Makefile.in: Regenerate.
+	* libc/sys/atdsp/dummy.S: Delete.
+	* newlib/libc/sys/atdsp/crt0.S (start): Poke fini entry into
+	_GLOBAL_REENT->atexit.
+
+	* math/ef_rem_pio2.c (two_over_pi): Change type to __uint8_t [].
+	* math/kf_rem_pio2.c (__kernel_rem_pio2f): Last parameter is pointer
+	to __uint8_t.
+	* common/fdlibm.h (__kernel_rem_pio2f): Update prototype.
+
+2009-09-24  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/include/machine/setjmp.h [atdsp]: Define _JBLEN.
+	* libc/machine/atdsp/setjmp.S: Rewrite from scratch.
+
+2009-09-23  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libc/sys/atdsp/sbrk.c (end,  __heap_end): declare.
+	(_sbrk_r): If sbrk_loc is uninitilized, initialize it.
+	If __heap_end is defined, use its address in preference to
+	sbrk_start + sbrk_size.
