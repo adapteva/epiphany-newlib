@@ -48,7 +48,7 @@ __uint32_t	 __call_hash(HTAB *, char *, int);
 int	 __delpair(HTAB *, BUFHEAD *, int);
 int	 __expand_table(HTAB *);
 int	 __find_bigpair(HTAB *, BUFHEAD *, int, char *, int);
-__uint16_t	 __find_last_page(HTAB *, BUFHEAD **);
+__uint32_t	 __find_last_page(HTAB *, BUFHEAD **);
 void	 __free_ovflpage(HTAB *, BUFHEAD *);
 BUFHEAD	*__get_buf(HTAB *, __uint32_t, BUFHEAD *, int);
 int	 __get_page(HTAB *, char *, __uint32_t, int, int, int);

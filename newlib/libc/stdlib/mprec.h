@@ -404,7 +404,7 @@ void		_EXFUN(hexdig_init,(void));
 int		_EXFUN(hexnan,(_CONST char **sp, struct FPI *fpi, __ULong *x0));
 #endif
 
-#define Bcopy(x,y) memcpy((char *)&x->_sign, (char *)&y->_sign, y->_wds*sizeof(__Long) + 2*sizeof(int))
+#define Bcopy(x,y) memcpy((char *)&x->_sign, (char *)&y->_sign, y->_wds*sizeof(__Long) + offsetof(_Bigint, _x) - offsetof(_Bigint, _sign))
 
 extern _CONST double tinytens[];
 extern _CONST double bigtens[];

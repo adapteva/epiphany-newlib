@@ -316,7 +316,7 @@ __find_bigpair(hashp, bufp, ndx, key, size)
  * of the pair; 0 if there isn't any (i.e. big pair is the last key in the
  * bucket)
  */
-extern __uint16_t
+extern __uint32_t
 __find_last_page(hashp, bpp)
 	HTAB *hashp;
 	BUFHEAD **bpp;

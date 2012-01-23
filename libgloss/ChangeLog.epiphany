@@ -1,0 +1,200 @@
+2012-01-19  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* epiphany/access.c: Moved from newlib.
+	* epiphany-config.h: Move to newlib.
+	* epiphany-syscalls.c: Adjust include name/path for epiphany-config.h .
+	* epiphany/isatty.c: Delete.
+	* epiphany/_isatty.c: New file, copied from newlib/libc/posix.
+	Change fstat to _fstat.
+	* epiphany/Makefile.in (COMMON_OBJS): Add access.c and _isatty.c .
+	Remove isatty.c .
+
+2012-01-18  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* epiphany/open.c (_open): Revert to use asm_open.
+	* epiphany/read.c (_read): Revert to use asm_read.
+	* epiphany/write.c (_write): Revert to use asm_write.
+
+2011-11-19  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* epiphany/write.c (outbyte): Remove.
+
+2011-11-17  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* configure: Regenerate.
+
+2011-11-14  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* epiphany/close.c (_close): Correctly return status and errno
+	from system call.
+	* epiphany/isatty.c (_isatty): Return 1 only for file descriptors
+	0 through 2.
+	* epiphany/link.c (_link): Call the underlying trap.
+	* epiphany/unlink.c (_unlink): Call the underlying trap.
+
+2011-11-09  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* epiphany/open.c: Include syscall.h.
+	Use asm_syscall, remove errno includes / defines / handling.
+	* epiphany/lseek.c: Likewise.
+	* epiphany-syscalls.h (<errno.h>):Unclude.
+	(errno): Undef and declare.
+	(asm_write): Use asm_write, asm_read: Add error handling.
+
+2011-11-08  Joern Rennecke  <joern.rennecke@embecosm.com>
+
+	* epiphany/unlink.c, epiphany/link.c: Match protypes in newlib headers.
+	* epiphany/fork.c, epiphany/open.c: Likewise.  Include <sys/types.h>.
+	* epiphany.lseek.c, epiphany.wait.c, epiphany/read.c: Likewise.
+	* epiphany/getpid.c, epiphany/execve.c, epiphany/write.c: Likewise.
+	* epiphany/kill.c: Likewise.
+
+	* epiphany/wait.c (_wait): Set errno to ENOSYS.
+	* epiphany/link.c (_link): Likewise.
+
+	* epiphany/Makefile.in (COMMON_OBJS): Add gettimeofday.o.
+	* epiphany/stat.c, epiphany/fstat.c (<errno.h>): Include.
+	(errno): #undef and declare.
+	(<syscall.h>): Include.
+	(_stat / _fstat): Use SYS_stat / SYS_fstat.
+	* epiphany/gettimeofday.c: New file.
+
+2011-11-04  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* epiphany/unlink.c, epiphany/open.c, epiphany/Makefile.in,
+	* epiphany/fork.c, epiphany/lseek.c, epiphany/wait.c,
+	* epiphany/configure.in, epiphany/close.c, epiphany/_exit.c,
+	* epiphany/epiphany-syscalls.c, epiphany/stat.c, epiphany/read.c,
+	* epiphany/getpid.c, epiphany/epiphany-syscalls.h,
+	* epiphany/isatty.c, epiphany/epiphany-ivthandlers.S,
+	* epiphany/execve.c, epiphany/environ.c, epiphany/fstat.c,
+	* epiphany/times.c, epiphany/_exit.S, epiphany/crt0.S,
+	* epiphany/write.c, epiphany/kill.c, epiphany/link.c: Added BSD
+	3-clause license header.
+
+2011-11-04  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* README: Added Epiphany to list of processors.
+
+2011-07-25  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* configure : Regenerate.
+
+2011-07-22  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany/crt0.S (_external_start): Set up destructors.
+	Call constructors.
+
+2011-07-21  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany/crt0.S (_external_start): Rename _stack, __bss_start to
+	___stack, ___bss_start.
+
+2011-07-18  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany/crt0.S (_external_start): Clear starting with
+	__sbss_start__; use strd.
+
+2011-06-23  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	Noted for the record, not by the author, date estimated.
+
+	* epiphany/crt0.S: Replaces epiphany/crt0.s
+	* epiphany/epiphany-ivthandlers.S, epiphany/epiphany-syscalls.c
+	* epiphany/epiphany-syscalls.h: Created.
+	* epiphany/sbrk.c, epiphany/stack.S: Deleted.
+	* configure, epiphany/aclocal.m4: Regenerated
+
+2010-03-17  Alan Lehotsky <apl@alum.mit.edu>
+
+	* epiphany/sbrk.c: check for heap/stack inter-penetration.
+	* epiphany/crt0.s: Use '_stack'.
+
+2010-03-07  Alan Lehotsky <apl@alum.mit.edu>
+
+	* epiphany/epiphany-sim.h (asm_open): avoid type cast warnings.
+
+2010-02-21  Alan Lehotsky <apl@alum.mit.edu>
+
+	* epiphany/epiphany-def.h: New file.
+	* epiphany/open.c: Use asm_open macro.
+	* epiphany/close.c: Use asm_close macro.
+	* epiphany/_exit.c: Use asm_exit macro.
+	* epiphany/read.c: Use asm_read macro.
+	* epiphany/_exit.S: Use trap #3.
+	* epiphany/write.c: Use asm_write macro.
+
+2009-10-19  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	Noted for the record, not by the author, date estimated.
+
+	* epiphany: Directory replaces atdsp directory.
+	* configure.in, epiphany/close.c, epiphany/configure,
+	* epiphany/configure.in, epiphany/crt0.S, epiphany/environ.c,
+	* epiphany/execve.c, epiphany/_exit.c, epiphany/_exit.S,
+	* epiphany/fork.c, epiphany/fstat.c, epiphany/getpid.c,
+	* epiphany/isatty.c, epiphany/kill.c, epiphany/link.c,
+	* epiphany/lseek.c, epiphany/Makefile.in, epiphany/open.c,
+	* epiphany/read.c, epiphany/stat.c, epiphany/times.c,
+	* epiphany/unlink.c, epiphany/wait.c, epiphany/write.c: All
+	refererences to atdsp replaced by epiphany.
+
+2009-10-19  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* atdsp/write.c (outbyte): Deleted.
+	* atdsp/write.c (_write): Replaced outbyte with inline SWI.
+
+2009-10-01  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* libgloss/atdsp/stack.S (stack): Set stack to 0x5ff0 .
+
+2009-09-20  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* atdsp/stack.S: Fix alignment.
+
+2009-09-17  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* atdsp/_exit.S: New file.
+	* atdsp/Makefile.in (_exit.o): New rule.
+
+2009-09-13  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* atdsp/crt0.s (_start): Reference init, fini and stack without
+	leading '_'.
+	* atdsp/stack.S: New file.
+	* Makefile.in (.S.o): New rule.
+	(SIMOBJS): Add stack.o .
+
+2009-09-05  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* atdsp/aclocal.m4: New file.
+	* atdsp/close.c: New file.
+	* atdsp/config.h.in: New file.
+	* atdsp/configure:  Regenerated.
+	* atdsp/configure.in: New file.
+	* atdsp/crt0.s: New file.
+	* atdsp/environ.c: New file.
+	* atdsp/execve.c: New file.
+	* atdsp/_exit.c: New file.
+	* atdsp/fork.c: New file.
+        * atdsp/fstat.c: New file.
+	* atdsp/getpid.c: New file.
+	* atdsp/isatty.c: New file.
+	* atdsp/kill.c: New file.
+	* atdsp/link.c: New file.
+	* atdsp/lseek.c: New file.
+	* atdsp/Makefile.in: New file.
+	* atdsp/open.c: New file.
+	* atdsp/read.c: New file.
+	* atdsp/sbrk.c: New file.
+	* atdsp/stat.c: New file.
+	* atdsp/times.c: New file.
+	* atdsp/unlink.c: New file.
+	* atdsp/write.c: New file.
+	* atdsp/wait.c: New file.
+
+2009-09-05  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	* configure.in: Added atdsp target. Fixed autoconf bug.
+	* configure: Regenerated
+	* atdsp: New directory

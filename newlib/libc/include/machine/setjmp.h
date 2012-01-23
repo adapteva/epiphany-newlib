@@ -25,6 +25,12 @@ _BEGIN_STD_C
 #define _JBLEN  40
 #endif
 
+#ifdef __epiphany__
+/* All callee preserved registers: r4-r10,fp, sp, lr,r15, r48-r55  */
+#define _JBTYPE long long
+#define _JBLEN 10
+#endif
+
 /* necv70 was 9 as well. */
 
 #if defined(__m68k__) || defined(__mc68000__)
