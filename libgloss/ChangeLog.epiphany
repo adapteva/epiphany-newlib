@@ -1,7 +1,7 @@
 2012-01-19  Joern Rennecke  <joern.rennecke@embecosm.com>
 
 	* epiphany/access.c: Moved from newlib.
-	* epiphany-config.h: Move to newlib.
+	* epiphany-config.h: Moved from newlib.
 	* epiphany-syscalls.c: Adjust include name/path for epiphany-config.h .
 	* epiphany/isatty.c: Delete.
 	* epiphany/_isatty.c: New file, copied from newlib/libc/posix.
