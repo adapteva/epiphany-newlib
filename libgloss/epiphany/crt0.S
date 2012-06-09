@@ -27,61 +27,34 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 
-.section IVT,"a",@progbits     ;
+.section IVT_RESET,"a",@progbits     ;
         .global _start;
         .type   _start, %function;
 _start:
 		.balign 4 ;
          b .normal_start
 
-        .balign 4 ; 0x4
-         b .sw_exception_v
-
-		.balign 4 ; 0x8
-         b .page_miss_v;
-
-		.balign 4 ; 0xc
-         b .timer0_expired_v
-
-		.balign 4 ; 0x10
-         b .timer1_expired_v
-
-		.balign 4 ; 0x14
-		b .message_v
-
-		.balign 4 ; 0x18
-		 b .dma0_v
-
-		.balign 4 ; 0x1c
-		 b .dma1_v
-
-		.balign 4 ; 0x20
-		 b .wand_v
-
-		.balign 4 ; 0x24
-		 b .soft_v
-
 .size  _start, .-_start
 
 .section RESERVED_CRT0,"a",@progbits     ;
 
+#The "main" C caller can be located in the externa memory
+#  _epiphany_start should be called by register to avoid linker problem
 .global .normal_start;
 .balign 4
 .type   .normal_start, %function
 .normal_start:
-	mov  r3,%low(_external_start)
-	movt r3,%high(_external_start)
+	mov  r3,%low(_epiphany_start)
+	movt r3,%high(_epiphany_start)
 	jalr r3
 .size  .normal_start, .-.normal_start
 
 
-
-
 .section .text;
 	.org    0x0000                  ; Relative to start of text section
-	.global _external_start
-	.type   _external_start, %function
-_external_start:
+	.global _epiphany_start
+	.type   _epiphany_start, %function
+_epiphany_start:
 
 	.align  4
 
@@ -137,6 +110,9 @@ _external_start:
 	movt r2,%high(init)
 	jalr r2
 
+	;;mask all Interrupts
+	mov R0,#0xffff
+	movts IMASK,R0
 
 	;;return from reset ISR
 	mov R0,%low(RDS)
@@ -163,4 +139,4 @@ RDS:
 	;; Should never reach here
 	idle
 
-.size   _external_start, .-_external_start
+.size   _epiphany_start, .-_epiphany_start

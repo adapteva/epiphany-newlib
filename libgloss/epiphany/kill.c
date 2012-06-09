@@ -7,12 +7,12 @@
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright notice,
+ * Redistributions of source code must retain the above copyright notice,
       this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of Adapteva nor the names of its contributors may be
+ * Neither the name of Adapteva nor the names of its contributors may be
       used to endorse or promote products derived from this software without
       specific prior written permission.
 
@@ -40,17 +40,16 @@ extern int  errno;
 /* ------------------------------------------------------------------------- */
 /*!Send a signal
 
-   This is a minimal implementation, just call the internal rise
+   The kill call is not supported
 
    @param[in] pid  The process that should receive the signal
    @param[in] sig  The signal to send
 
    @return  0 on success, -1 on failure with an error code in errno.         */
 /* ------------------------------------------------------------------------- */
-extern int e_raise(int signum);
 int __attribute__ ((section ("libgloss_epiphany")))
 _kill (pid_t pid, int sig)
 {
-  //errno = EINVAL;
-  return  e_raise(sig);
+	errno = ENOSYS;			/* We don't do processes */
+	return -1;
 }	/* _kill () */

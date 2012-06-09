@@ -31,15 +31,6 @@
 #define _EPIPHANY_CONFIG_H
 
 
-extern unsigned _stack_start_;
-extern unsigned _heap_start_;
-extern unsigned _heap_end_;
-extern unsigned _CORE_NUM_;
-
-
-
-
-
 enum ECORE_SIGNALS {
 #ifndef 	SIG_DFL
    SIG_DFL=0,

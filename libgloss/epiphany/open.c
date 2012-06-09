@@ -1,6 +1,6 @@
 /* EPIPHANY implementation of _open ()
 
-   Copyright (c) 2011, 2012 Adapteva, Inc.
+   Copyright (c) 2011, Adapteva, Inc.
    All rights reserved.
 
    Contributor Jeremy Bennett <jeremy.bennett@embecosm.com> for Adapteva Inc
@@ -45,5 +45,5 @@
 int __attribute__ ((section ("libgloss_epiphany")))
 _open (const char *file, int flags, mode_t mode)
 {
-  return asm_open (file, flags, mode);
+  return asm_syscall (file, flags, mode, SYS_open);
 }	/* _open () */

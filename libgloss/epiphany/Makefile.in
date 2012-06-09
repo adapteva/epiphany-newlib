@@ -132,7 +132,7 @@ COMMON_OBJS = access.o  \
               fstat.o    \
               getpid.o   \
               gettimeofday.o \
-              _isatty.o  \
+              isatty.o  \
               kill.o     \
               link.o     \
               lseek.o    \
@@ -145,7 +145,7 @@ COMMON_OBJS = access.o  \
               write.o    \
               _exit.o    \
               epiphany-syscalls.o \
-              epiphany-ivthandlers.o
+              epiphany-ivthandler.o
 
 UNUSED_OBJS = chown.o    \
               errno.o    \

@@ -5,12 +5,12 @@
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright notice,
+ * Redistributions of source code must retain the above copyright notice,
       this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * Neither the name of Adapteva nor the names of its contributors may be
+ * Neither the name of Adapteva nor the names of its contributors may be
       used to endorse or promote products derived from this software without
       specific prior written permission.
 
@@ -51,67 +51,62 @@ extern int errno;
 
 
 /* prototypical inline asm */
-int __attribute__ ((section ("libgloss_epiphany")))  asm_write (int CHAN, void* ADDR, int LEN)
-{
+
+int __attribute__ ((section ("libgloss_epiphany")))  asm_write (int CHAN, void* ADDR, int LEN) {
 	register int chan asm("r0") = CHAN;
 	register void* addr asm("r1") = ADDR;
 	register int len asm("r2") = LEN;
 	register int result asm("r0");
 	register int error asm("r3");
 	asm ("trap 0" : "=r" (result), "=r" (error) :
-	     "r" (chan), "r" (addr), "r" (len));
+			"r" (chan), "r" (addr), "r" (len));
 	if (error)
-	  errno = error;
+		errno = error;
 	return result;
 }
 
-int __attribute__ ((section ("libgloss_epiphany")))  asm_read(int CHAN, void *ADDR, int LEN)
-{
+int __attribute__ ((section ("libgloss_epiphany")))  asm_read(int CHAN, void *ADDR, int LEN) {
 	register int chan asm("r0") = CHAN;
 	register void* addr asm("r1") = ADDR;
 	register int len asm("r2") = LEN;
 	register int result asm("r0");
 	register int error asm("r3");
 	asm ("trap 1" : "=r" (result), "=r" (error) :
-	     "r" (chan), "r" (addr), "r" (len));
+			"r" (chan), "r" (addr), "r" (len));
 	if (error)
-	  errno = error;
+		errno = error;
 	return result;
 }
 
 
-int __attribute__ ((section ("libgloss_epiphany")))
-asm_open(const char* FILE, int FLAGS, int MODE)
-{
+int __attribute__ ((section ("libgloss_epiphany"))) asm_open(const char* FILE, int FLAGS, int MODE) {
 	register const char* file asm("r0") = FILE;
 	register int flags asm("r1") = FLAGS;
 	register int result asm("r0");
 	register int error asm("r3");
 	asm ("trap 2" : "=r" (result), "=r" (error) : "r" (file), "r" (flags));
 	if (error)
-	  errno = error;
+		errno = error;
 	return result;
 }
 
-void __attribute__ ((section ("libgloss_epiphany")))  asm_exit(int STATUS)
-{
+
+void __attribute__ ((section ("libgloss_epiphany")))  asm_exit(int STATUS)	{
 	register int status asm("r0") = STATUS;
 	asm("trap 3" :: "r" (status));
 }
 
-int __attribute__ ((section ("libgloss_epiphany")))  asm_close(int CHAN)
-{
+int __attribute__ ((section ("libgloss_epiphany")))  asm_close(int CHAN) {
 	register int chan asm("r0") = CHAN;
 	register int result asm("r0");
 	register int error asm("r3");
 	asm ("trap 6" : "=r" (result), "=r" (error) : "r" (chan));
 	if (error)
-	  errno = error;
+		errno = error;
 	return result;
 }
 
-int __attribute__ ((section ("libgloss_epiphany")))  asm_syscall(void *P1,void *P2, void *P3, int SUBFUN)
-{
+int __attribute__ ((section ("libgloss_epiphany")))  asm_syscall(void *P1,void *P2, void *P3, int SUBFUN) {
 	register void* p1 asm("r0") = (void*)P1;
 	register void* p2 asm("r1") = (void*)P2;
 	register void* p3 asm("r2") = (void*)P3;
@@ -119,155 +114,8 @@ int __attribute__ ((section ("libgloss_epiphany")))  asm_syscall(void *P1,void *
 	register int subfun asm("r3") = SUBFUN;
 	register int error asm("r3");
 	asm ("trap 7" : "=r" (result), "=r" (error) :
-	     "r" (p1), "r" (p2), "r" (p3), "r" (subfun));
+			"r" (p1), "r" (p2), "r" (p3), "r" (subfun));
 	if (error)
-	  errno = error;
+		errno = error;
 	return result;
-}
-
-/*
- * Signal functions implementation
- *
- */
-
-#include "epiphany-config.h"
-
-
-#define HW_RESET 0
-#define SW_EXCEPTION_IVT_N 1
-#define PAGE_MISS_IVT_N 2
-#define TIMER0_IVT_N 3
-#define TIMER1_IVT_N 4
-#define MESSAGE_IVT_N 5
-#define DMA0_IVT_N 6
-#define DMA1_IVT_N 7
-#define WAND_IVT_N 8
-#define USR_SOFT_IVT_N 9
-
-
-typedef void (*sighandler_t)(int);
-extern sighandler_t ISR_VECTOR[];
-extern void DEFAULT_ISR_CALLBACK();
-
-sighandler_t __attribute__ ((section ("libgloss_epiphany")))  signal(int signum, sighandler_t handler) {
-	switch( signum )
-	{
-	case SIG_DFL /* see signal.h */:
-		//the default is ignore
-		break;
-	case SIG_IGN /* see signal.h */ :
-		DEFAULT_ISR_CALLBACK();
-		break;
-	case SIG_ERR :
-		asm("trap 5");
-		break;
-	case SIG_RESET:
-		ISR_VECTOR[HW_RESET] = handler;
-		break;
-	case SIG_SW_EXCEPTION:
-		ISR_VECTOR[SW_EXCEPTION_IVT_N] = handler;
-		break;
-	case SIG_PAGE_MISS:
-		ISR_VECTOR[PAGE_MISS_IVT_N] = handler;
-		break;
-	case SIG_TIMER0:
-		ISR_VECTOR[TIMER0_IVT_N] = handler;
-		break;
-	case SIG_TIMER1:
-		ISR_VECTOR[TIMER1_IVT_N] = handler;
-		break;
-	case SIG_MESSAGE:
-		ISR_VECTOR[MESSAGE_IVT_N] = handler;
-		break;
-	case SIG_DMA0:
-		ISR_VECTOR[DMA0_IVT_N] = handler;
-		break;
-	case SIG_DMA1:
-		ISR_VECTOR[DMA1_IVT_N] = handler;
-		break;
-	case SIG_WAND:
-		ISR_VECTOR[WAND_IVT_N] = handler;
-		break;
-
-	case SIG_USR1:
-		ISR_VECTOR[USR_SOFT_IVT_N] = handler;
-		break;
-	default:
-		//do nothing
-		return 0;
-	}
-
-	return 0;
-}
-
-//int e_raise(int signum) __attribute__ ((optimize("O0")));
-
-int __attribute__ ((section ("libgloss_epiphany")))  e_raise(int signum) {
-
-	//register int imask asm("r4") = 0 ;
-	volatile register int ilatst /*asm("r5") */= signum;
-
-	switch( signum )
-	{
-	case SIG_DFL /* see signal.h */:
-		//the default is ignore
-		return 0;
-	case SIG_IGN /* see signal.h */ :
-		//do nothing
-		return 0;
-	case SIG_ERR :
-
-		return 0;
-	case SIG_RESET:
-		//imask = 1 << HW_RESET;
-		ilatst = 1 << HW_RESET;
-		break;
-
-	case SIG_SW_EXCEPTION:
-		//imask = 1 << SW_EXCEPTION_IVT_N;
-		ilatst = 1 << SW_EXCEPTION_IVT_N;
-		break;
-	case SIG_PAGE_MISS:
-		//imask = 1 << PAGE_MISS_IVT_N;
-		ilatst = 1 << PAGE_MISS_IVT_N;
-		break;
-	case SIG_TIMER0:
-		//imask = 1 << TIMER0_IVT_N;
-		ilatst = 1 << TIMER0_IVT_N;
-		break;
-	case SIG_TIMER1:
-		//imask = 1 << TIMER1_IVT_N;
-		ilatst = 1 << TIMER1_IVT_N;
-		break;
-	case SIG_MESSAGE:
-		//imask = 1 << MESSAGE_IVT_N;
-		ilatst = 1 << MESSAGE_IVT_N;
-		break;
-	case SIG_DMA0:
-		//imask = 1 << DMA0_IVT_N;
-		ilatst = 1 << DMA0_IVT_N;
-		break;
-	case SIG_DMA1:
-		//imask = 1 << DMA1_IVT_N;
-		ilatst = 1 << DMA1_IVT_N;
-		break;
-	case SIG_WAND:
-		__asm__ __volatile__ ("wand");
-		//ilatst = 1 << WAND_IVT_N;
-		//break;
-		return;
-
-	case SIG_USR1:
-		ilatst = 1 << USR_SOFT_IVT_N;
-		break;
-
-	default:
-		//do nothing
-		return 0;
-	}
-	//asm("movts imask, r4;");
-	//asm("movts ilatst, r5;");
-	__asm__ __volatile__ ("movts ilatst, %0"  : "=r" (ilatst) : "r" (ilatst));
-	return 0;
-
 }
