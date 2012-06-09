@@ -1,6 +1,6 @@
 /* EPIPHANY implementation of _read ()
 
-   Copyright (c) 2011, 2012 Adapteva, Inc.
+   Copyright (c) 2011, Adapteva, Inc.
    All rights reserved.
 
    Contributor Jeremy Bennett <jeremy.bennett@embecosm.com> for Adapteva Inc
@@ -35,7 +35,7 @@
 /* ------------------------------------------------------------------------- */
 /*!Read a file
 
-   @param[in] fildes  The descriptor of the file from which to read
+   @param[in] fildes  The descriptor of the file from whcih to read
    @param[in] ptr     Buffer for the read data
    @param[in] len     Maximum number of bytes to read
 
@@ -45,5 +45,5 @@
 ssize_t __attribute__ ((section ("libgloss_epiphany")))
 _read (int fildes, void *ptr, size_t len)
 {
-  return asm_read (fildes, ptr, len);
+  return asm_syscall (fildes, ptr, len, SYS_read);
 }	/* _read () */

@@ -1,4 +1,4 @@
-/* EPIPHANY implementation of _write ()
+/* EPIPHANY implementation of _isatty ()
 
    Copyright (c) 2011, Adapteva, Inc.
    All rights reserved.
@@ -28,25 +28,26 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
-#include <sys/types.h>
-#include "epiphany-syscalls.h"
-#include "syscall.h"
-
 
 /* ------------------------------------------------------------------------- */
-/*!Write to a file
+/*!Query whether output stream is a terminal
 
-  CGEN simulator file output.
+   This is a slightly more than minimal implementation. Really we would like
+   the simulator to tell us the answer, but for now we don't have a system
+   call number to use
 
-   @param[in] fildes  File descriptor to write to
-   @param[in] ptr     Buffer of data to write
-   @param[in] len     Number of bytes to write
+   So we assume that file descriptors 0, 1 and 2 are TTY and everything else
+   is not.
 
-   @return  Number of bytes written on success, -1 on failure with an error
-            code in errno.                                                   */
+   @todo Add a system call number for isatty.
+
+   @param[in] filedes  The file descriptor to query
+
+   @return  1 (TRUE) if this is a descriptor for a TTY, 0 (FALSE) otherwise. */
 /* ------------------------------------------------------------------------- */
-ssize_t __attribute__ ((section ("libgloss_epiphany")))
-_write (int file, const void *ptr, size_t len)
+int __attribute__ ((section ("libgloss_epiphany")))
+_isatty (int filedes)
 {
-  return asm_syscall (file, ptr, len, SYS_write);
-}	/* _write () */
+  return (0 <= filedes) && (filedes <=2);
+
+}	/* _isatty () */
