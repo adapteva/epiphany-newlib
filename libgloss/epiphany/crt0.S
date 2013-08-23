@@ -62,7 +62,9 @@ _epiphany_start:
 	;; is somewhere meaningful.
 	mov	sp,%low(___stack)
 	movt	sp,%high(___stack)
-	mov	fp,sp
+	;; Save replace for now incase overlay test fails
+	;; 	mov	fp,sp
+	mov r15, #0
 
 	;; Zero the data space
 	mov	r0,%low(___bss_start)
