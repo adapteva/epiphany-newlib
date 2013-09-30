@@ -111,7 +111,7 @@ _epiphany_start:
 	jalr r2
 
 	;;mask all Interrupts
-	mov R0,#0xffff
+	mov R0,#0xfffe
 	movts IMASK,R0
 
 	;;return from reset ISR
