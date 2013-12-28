@@ -51,6 +51,6 @@ extern int  errno;
 int __attribute__ ((section ("libgloss_epiphany")))
 _close (int  fildes)
 {
-  return  asm_close (fildes);
+  return asm_syscall (fildes, NULL, NULL, SYS_close);
 
 }	/* _close () */
