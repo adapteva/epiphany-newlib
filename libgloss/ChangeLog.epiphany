@@ -1,3 +1,7 @@
+2014-06-13  Pierre Langlois  <pierre.langlois@embecosm.com>
+
+	* libgloss/epiphany/crt0.S: Change r15 to fp.
+
 2012-01-19  Joern Rennecke  <joern.rennecke@embecosm.com>
 
 	* epiphany/access.c: Moved from newlib.

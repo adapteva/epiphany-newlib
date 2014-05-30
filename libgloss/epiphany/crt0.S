@@ -64,7 +64,7 @@ _epiphany_start:
 	movt	sp,%high(___stack)
 	;; Save replace for now incase overlay test fails
 	;; 	mov	fp,sp
-	mov r15, #0
+	mov fp, #0
 
 	;; Zero the data space
 	mov	r0,%low(___bss_start)
