@@ -156,7 +156,7 @@ UNUSED_OBJS = chown.o    \
 # Object files specific to particular targets.
 SIMOBJS = $(COMMON_OBJS)
 
-OUTPUTS = libepiphany.a crt0.o
+OUTPUTS = libepiphany.a crt0.o cachemanager.o
 
 all: $(OUTPUTS)
 
