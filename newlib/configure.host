@@ -79,7 +79,7 @@ case "${target_optspace}:${host}" in
   yes:*)
     newlib_cflags="${newlib_cflags} -Os"
     ;;
-  :m32r-* | :d10v-* | :d30v-* | :avr-* | :m32c-* )
+  :m32r-* | :d10v-* | :d30v-* | :avr-* | :m32c-* | :msp430*-* | :nds32* | :rl78-* )
     newlib_cflags="${newlib_cflags} -Os"
     ;;
   no:* | :*)
@@ -95,11 +95,16 @@ case "${host_cpu}" in
   a29k)
 	machine_dir=a29k
 	;;
+  aarch64*)
+	machine_dir=aarch64
+	libm_machine_dir=aarch64
+	;;
   arc)
 	machine_dir=
 	;;
-  arm)
+  arm*)
 	machine_dir=arm
+	libm_machine_dir=arm
 	;;
   avr*)
 	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED -mcall-prologues"
@@ -198,7 +203,7 @@ case "${host_cpu}" in
 	;;
   mcore)
 	;;
-  microblaze)
+  microblaze*)
 	machine_dir=microblaze
 	;;
   mep)
@@ -219,8 +224,23 @@ case "${host_cpu}" in
   moxie)
 	machine_dir=moxie
         ;;
+  msp430*)
+	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED -DSMALL_MEMORY"
+	newlib_cflags="${newlib_cflags} -ffunction-sections -fdata-sections "
+	newlib_cflags="${newlib_cflags} -mOs "
+	machine_dir=msp430
+	;;
   mt*)
 	machine_dir=mt
+	;;
+  nds32*)
+	machine_dir=nds32
+	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED "
+	newlib_cflags="${newlib_cflags} -DSMALL_MEMORY "
+	newlib_cflags="${newlib_cflags} -ffunction-sections -fdata-sections"
+	;;
+  nios2*)
+	machine_dir=nios2
 	;;
   or16)
 	;;
@@ -232,6 +252,7 @@ case "${host_cpu}" in
   rl78)
 	machine_dir=rl78
 	newlib_cflags="${newlib_cflags} -DPREFER_SIZE_OVER_SPEED -DSMALL_MEMORY"
+	newlib_cflags="${newlib_cflags} -ffunction-sections -fdata-sections "
 	;;
   rx)
 	machine_dir=rx
@@ -270,8 +291,8 @@ case "${host_cpu}" in
 	machine_dir=x86_64
 	;;
   xc16x*)
-    machine_dir=xc16x
-    ;;
+        machine_dir=xc16x
+        ;;
   xstormy16)
 	machine_dir=xstormy16
 	newlib_cflags="${newlib_cflags} -DMALLOC_PROVIDED"
@@ -367,7 +388,7 @@ case "${host}" in
   arc-*-*)
 	sys_dir=arc
 	;;
-  arm-*-*)
+  arm*-*-*)
 	sys_dir=arm
 	if [ "x${newlib_may_supply_syscalls}" = "xno" ] ; then
 	  have_crt0="no"
@@ -438,6 +459,7 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -D_I386MACH_ALLOW_HW_INTERRUPTS"
 	newlib_cflags="${newlib_cflags} -DHAVE_FCNTL"
 	newlib_cflags="${newlib_cflags} -DHAVE_GETOPT"
+	newlib_cflags="${newlib_cflags} -D_NO_POSIX_SPAWN"
 	# --- Required when building a shared library ------------------------
 	newlib_cflags="${newlib_cflags} -fPIC -D_I386MACH_NEED_SOTYPE_FUNCTION"
 	# --- The three lines below are optional ------------------------------
@@ -459,7 +481,7 @@ case "${host}" in
 	default_newlib_io_long_long="yes"
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
 	;;
-  microblaze-*-*)
+  microblaze*-*-*)
 	machine_dir=microblaze
 	;;
   mips*-dec-*)
@@ -471,6 +493,9 @@ case "${host}" in
   moxie*)
         sys_dir=
         ;;
+  nios2*)
+	sys_dir=
+	;;
   powerpcle-*-pe)
 	posix_dir=posix
 	;;
@@ -545,7 +570,7 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -D_COMPILING_NEWLIB"
 	newlib_cflags="${newlib_cflags} -DMALLOC_PROVIDED -DEXIT_PROVIDED -DSIGNAL_PROVIDED -DREENTRANT_SYSCALLS_PROVIDED -DHAVE_NANOSLEEP -DHAVE_BLKSIZE -DHAVE_FCNTL -DHAVE_ASSERT_FUNC"
         # turn off unsupported items in posix directory 
-	newlib_cflags="${newlib_cflags} -D_NO_GETLOGIN -D_NO_GETPWENT -D_NO_GETUT -D_NO_GETPASS -D_NO_SIGSET -D_NO_WORDEXP -D_NO_POPEN"
+	newlib_cflags="${newlib_cflags} -D_NO_GETLOGIN -D_NO_GETPWENT -D_NO_GETUT -D_NO_GETPASS -D_NO_SIGSET -D_NO_WORDEXP -D_NO_POPEN -D_NO_POSIX_SPAWN"
 	;;
 # VxWorks supplies its own version of malloc, and the newlib one
 # doesn't work because VxWorks does not have sbrk.
@@ -557,13 +582,17 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -DNO_EXEC"
 	syscall_dir=syscalls
 	;;
+  aarch64*-*-*)
+	default_newlib_io_long_long="yes"
+	syscall_dir=syscalls
+	;;
   arc-*-*)
 	syscall_dir=syscalls
 	;;
-  arm-*-pe)
+  arm*-*-pe)
 	syscall_dir=syscalls
 	;;
-  arm-*-*)
+  arm*-*-*)
 	syscall_dir=syscalls
 # If newlib is supplying syscalls, select which debug protocol is being used.
 # ARM_RDP_MONITOR selects the Demon monitor.
@@ -669,7 +698,7 @@ case "${host}" in
   mcore-*-*)
 	syscall_dir=syscalls
 	;;
-  microblaze-*-*)
+  microblaze*-*-*)
    	default_newlib_io_long_long="yes"
  	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES -DSMALL_MEMORY -D_REENT_SMALL"
 	;;
@@ -694,6 +723,13 @@ case "${host}" in
         syscall_dir=syscalls
 	default_newlib_io_long_long="yes"
         ;;
+  nios2*)
+	syscall_dir=
+	newlib_cflags="${newlib_cflags} -DHAVE_RENAME -DHAVE_SYSTEM -DMISSING_SYSCALL_NAMES"
+	;;
+  nds32*)
+	syscall_dir=syscalls
+	;;
   powerpc*-*-eabialtivec*)
 	default_newlib_io_long_long="yes"
 	newlib_cflags="${newlib_cflags} -DMISSING_SYSCALL_NAMES"
@@ -712,7 +748,7 @@ case "${host}" in
 	newlib_cflags="${newlib_cflags} -mrelocatable-lib -mno-eabi -mstrict-align -DMISSING_SYSCALL_NAMES"
 	;;
   powerpcle-*-pe)
-	newlib_cflags="${newlib_cflags} -DHAVE_OPENDIR -DHAVE_RENAME -DHAVE_FCNTL"
+	newlib_cflags="${newlib_cflags} -DHAVE_OPENDIR -DHAVE_RENAME -DHAVE_FCNTL -D_NO_POSIX_SPAWN"
 	syscall_dir=syscalls
 	;;
   sh*-*-*)
@@ -800,7 +836,7 @@ if [ "x${newlib_atexit_dynamic_alloc}" = "x" ]; then
 fi
 
 # Remove rpc headers if xdr_dir not specified
-if [ "x${xdir_dir}" = "x" ]; then
+if [ "x${xdr_dir}" = "x" ]; then
 	noinclude="${noinclude} rpc/types.h rpc/xdr.h"
 fi
 

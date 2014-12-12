@@ -27,8 +27,8 @@
 int
 _DEFUN(_asprintf_r, (ptr, strp, fmt),
        struct _reent *ptr _AND
-       char **strp        _AND
-       const char *fmt _DOTS)
+       char **__restrict strp        _AND
+       const char *__restrict fmt _DOTS)
 {
   int ret;
   va_list ap;
@@ -45,7 +45,7 @@ _DEFUN(_asprintf_r, (ptr, strp, fmt),
   if (ret >= 0)
     {
       *f._p = 0;
-      *strp = f._bf._base;
+      *strp = (char *) f._bf._base;
     }
   return (ret);
 }
@@ -54,8 +54,8 @@ _DEFUN(_asprintf_r, (ptr, strp, fmt),
 
 int
 _DEFUN(asprintf, (strp, fmt),
-       char **strp _AND
-       const char *fmt _DOTS)
+       char **__restrict strp _AND
+       const char *__restrict fmt _DOTS)
 {
   int ret;
   va_list ap;
@@ -72,7 +72,7 @@ _DEFUN(asprintf, (strp, fmt),
   if (ret >= 0)
     {
       *f._p = 0;
-      *strp = f._bf._base;
+      *strp = (char *) f._bf._base;
     }
   return (ret);
 }

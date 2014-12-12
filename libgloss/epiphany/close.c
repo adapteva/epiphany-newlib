@@ -1,6 +1,6 @@
 /* EPIPHANY implementation of _close ()
 
-   Copyright (c) 2011, Adapteva, Inc.
+   Copyright (c) 2011, 2012 Adapteva, Inc.
    All rights reserved.
 
    Contributor Jeremy Bennett <jeremy.bennett@embecosm.com> for Adapteva Inc
@@ -29,11 +29,7 @@
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
 
-/* Work around Red Hat way of doing errno as a macro */
 #include <errno.h>
-#undef errno
-extern int  errno;
-
 #include "epiphany-syscalls.h"
 
 /* ------------------------------------------------------------------------- */

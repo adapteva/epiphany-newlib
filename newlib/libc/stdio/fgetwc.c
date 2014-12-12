@@ -164,10 +164,10 @@ _DEFUN(_fgetwc_r, (ptr, fp),
 {
   wint_t r;
 
-  _flockfile (fp);
+  _newlib_flockfile_start (fp);
   ORIENT(fp, 1);
   r = __fgetwc (ptr, fp);
-  _funlockfile (fp);
+  _newlib_flockfile_end (fp);
   return r;
 }
 
@@ -175,6 +175,8 @@ wint_t
 _DEFUN(fgetwc, (fp),
 	FILE *fp)
 {
-  CHECK_INIT(_REENT, fp);
-  return _fgetwc_r (_REENT, fp);
+  struct _reent *reent = _REENT;
+
+  CHECK_INIT(reent, fp);
+  return _fgetwc_r (reent, fp);
 }

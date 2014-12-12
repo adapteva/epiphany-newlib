@@ -153,9 +153,9 @@ set_week_number_mon4 (struct tm *timeptr, int wnum)
 char *
 //strptime (const char *buf, const char *format, struct tm *timeptr)
 _DEFUN (strptime, (buf, format, timeptr),
-	_CONST char *buf _AND
-	_CONST char *format _AND
-	struct tm *timeptr)
+	_CONST char *__restrict buf _AND
+	_CONST char *__restrict format _AND
+	struct tm *__restrict timeptr)
 {
     char c;
     int ymd = 0;
@@ -165,8 +165,8 @@ _DEFUN (strptime, (buf, format, timeptr),
 	char *s;
 	int ret;
 
-	if (isspace (c)) {
-	    while (isspace (*buf))
+	if (isspace ((unsigned char) c)) {
+	    while (isspace ((unsigned char) *buf))
 		++buf;
 	} else if (c == '%' && format[1] != '\0') {
 	    c = *++format;

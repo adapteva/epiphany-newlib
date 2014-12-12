@@ -34,6 +34,33 @@ _start:
 		.balign 4 ;
          b .normal_start
 
+        .balign 4 ; 0x4
+         b .sw_exception_v
+
+		.balign 4 ; 0x8
+         b .page_miss_v;
+
+		.balign 4 ; 0xc
+         b .timer0_expired_v
+
+		.balign 4 ; 0x10
+         b .timer1_expired_v
+
+		.balign 4 ; 0x14
+		b .message_v
+
+		.balign 4 ; 0x18
+		 b .dma0_v
+
+		.balign 4 ; 0x1c
+		 b .dma1_v
+
+		.balign 4 ; 0x20
+		 b .wand_v
+
+		.balign 4 ; 0x24
+		 b .soft_v
+
 .size  _start, .-_start
 
 .section RESERVED_CRT0,"a",@progbits     ;

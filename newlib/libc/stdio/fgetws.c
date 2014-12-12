@@ -35,17 +35,19 @@ INDEX
 
 ANSI_SYNOPSIS
 	#include <wchar.h>
-	wchar_t *fgetws(wchar_t *<[ws]>, int <[n]>, FILE *<[fp]>);
+	wchar_t *fgetws(wchar_t *__restrict <[ws]>, int <[n]>,
+                        FILE *__restrict <[fp]>);
 
 	#include <wchar.h>
-	wchar_t *_fgetws_r(struct _reent *<[ptr]>, wchar_t *<[ws]>, int <[n]>, FILE *<[fp]>);
+	wchar_t *_fgetws_r(struct _reent *<[ptr]>, wchar_t *<[ws]>,
+                           int <[n]>, FILE *<[fp]>);
 
 TRAD_SYNOPSIS
 	#include <wchar.h>
 	wchar_t *fgetws(<[ws]>,<[n]>,<[fp]>)
-	wchar_t *<[ws]>;
+	wchar_t *__restrict <[ws]>;
 	int <[n]>;
-	FILE *<[fp]>;
+	FILE *__restrict <[fp]>;
 
 	#include <wchar.h>
 	wchar_t *_fgetws_r(<[ptr]>, <[ws]>,<[n]>,<[fp]>)
@@ -93,7 +95,7 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
   const char *src;
   unsigned char *nl;
 
-  _flockfile (fp);
+  _newlib_flockfile_start (fp);
   ORIENT (fp, 1);
 
   if (n <= 0)
@@ -110,9 +112,13 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
     {
       src = (char *) fp->_p;
       nl = memchr (fp->_p, '\n', fp->_r);
-      nconv = _mbsrtowcs_r (ptr, wsp, &src,
-			    nl != NULL ? (nl - fp->_p + 1) : fp->_r,
-			    &fp->_mbstate);
+      nconv = _mbsnrtowcs_r (ptr, wsp, &src,
+			     /* Read all bytes up to the next NL, or up to the
+				end of the buffer if there is no NL. */
+			     nl != NULL ? (nl - fp->_p + 1) : fp->_r,
+			     /* But never more than n - 1 wide chars. */
+			     n - 1,
+			     &fp->_mbstate);
       if (nconv == (size_t) -1)
 	/* Conversion error */
 	goto error;
@@ -142,20 +148,22 @@ _DEFUN(_fgetws_r, (ptr, ws, n, fp),
     /* Incomplete character */
     goto error;
   *wsp++ = L'\0';
-  _funlockfile (fp);
+  _newlib_flockfile_exit (fp);
   return ws;
 
 error:
-  _funlockfile (fp);
+  _newlib_flockfile_end (fp);
   return NULL;
 }
 
 wchar_t *
 _DEFUN(fgetws, (ws, n, fp),
-	wchar_t *ws _AND
+	wchar_t *__restrict ws _AND
 	int n _AND
-	FILE *fp)
+	FILE *__restrict fp)
 {
-  CHECK_INIT (_REENT, fp);
-  return _fgetws_r (_REENT, ws, n, fp);
+  struct _reent *reent = _REENT;
+
+  CHECK_INIT (reent, fp);
+  return _fgetws_r (reent, ws, n, fp);
 }
