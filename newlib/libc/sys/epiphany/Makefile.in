@@ -95,7 +95,7 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 lib_a_AR = $(AR) $(ARFLAGS)
 lib_a_LIBADD =
-am_lib_a_OBJECTS = lib_a-e_printf.$(OBJEXT)
+am_lib_a_OBJECTS = lib_a-sbrk.$(OBJEXT) lib_a-e_printf.$(OBJEXT)
 lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp =
@@ -221,7 +221,7 @@ AM_CCASFLAGS = $(INCLUDES)
 noinst_LIBRARIES = lib.a
 
 # crt0.o comes from libgloss
-lib_a_SOURCES = e_printf.c
+lib_a_SOURCES = sbrk.c e_printf.c
 lib_a_CCASFLAGS = $(AM_CCASFLAGS)
 lib_a_CFLAGS = $(AM_CFLAGS)
 ACLOCAL_AMFLAGS = -I ../../.. -I ../../../..
@@ -283,6 +283,12 @@ distclean-compile:
 
 .c.obj:
 	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+lib_a-sbrk.o: sbrk.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-sbrk.o `test -f 'sbrk.c' || echo '$(srcdir)/'`sbrk.c
+
+lib_a-sbrk.obj: sbrk.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-sbrk.obj `if test -f 'sbrk.c'; then $(CYGPATH_W) 'sbrk.c'; else $(CYGPATH_W) '$(srcdir)/sbrk.c'; fi`
 
 lib_a-e_printf.o: e_printf.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-e_printf.o `test -f 'e_printf.c' || echo '$(srcdir)/'`e_printf.c
