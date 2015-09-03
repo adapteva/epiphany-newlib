@@ -28,8 +28,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.                                               */
 
-	.section .text
-	.global	__exit
-__exit:
-    trap    #3              ; exit
-   	b __exit
+#include <machine/epiphany-asm.h>
+
+	.section	.text
+	.global		SYM(_exit)
+SYM(_exit):
+	;; TODO: idle instead of trap on metal?
+	trap    #3              ; exit
+	b SYM(_exit)

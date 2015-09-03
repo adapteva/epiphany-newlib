@@ -52,15 +52,15 @@ typedef void (*sighandler_t)(int);
 void DEFAULT_ISR_CALLBACK(int signum) {
 	//do nothing
 }
-inline void TRAP_FAIL(int signum) {
+void TRAP_FAIL(int signum) {
 	__asm__ __volatile__ ("trap 5");
 }
 
 
-extern void epiphany_start(int);
+extern void _epiphany_start();
 
 sighandler_t ISR_VECTOR[] __attribute__ ((section ("reserved_crt0"))) = {
-		epiphany_start,
+		_epiphany_start,
 		TRAP_FAIL,
 		DEFAULT_ISR_CALLBACK,
 		DEFAULT_ISR_CALLBACK,

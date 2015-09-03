@@ -26,12 +26,16 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
+#include <machine/epiphany-asm.h>
+
+;; TODO: The ABI will likely change to more caller-saved registers.
+
 	.file "setjmp.S"
         .section .text
         .align 4
-	.global  _setjmp
-        .type _setjmp, %function
-_setjmp:
+	.global  SYM(setjmp)
+        .type SYM(setjmp), %function
+SYM(setjmp):
 	strd lr,[r0]
 	strd r4,[r0,1]
 	strd r6,[r0,2]
@@ -44,10 +48,10 @@ _setjmp:
 	str sp,[r0,18]
 	mov r0,#0
 	rts
-	.size _setjmp, .-_setjmp
+	.size SYM(setjmp), .-SYM(setjmp)
 
-	.global _longjmp
-_longjmp:
+	.global SYM(longjmp)
+SYM(longjmp):
 	ldrd lr,[r0] ; return address / r15
 	ldrd r4,[r0,1]
 	ldrd r6,[r0,2]
@@ -62,4 +66,4 @@ _longjmp:
 	mov r0,#1
 	movne r0,r1
 	jr lr
-        .size   _longjmp, .-_longjmp
+        .size   SYM(longjmp), .-SYM(longjmp)

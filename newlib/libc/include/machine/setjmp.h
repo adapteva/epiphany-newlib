@@ -37,6 +37,7 @@ _BEGIN_STD_C
 
 #ifdef __epiphany__
 /* All callee preserved registers: r4-r10,fp, sp, lr,r15, r32-r39  */
+/* TODO: The ABI will likely change to more caller-saved registers. */
 #define _JBTYPE long long
 #define _JBLEN 10
 #endif

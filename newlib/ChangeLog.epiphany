@@ -1,3 +1,11 @@
+2015-09-03  Ola Jeppsson  <ola@adapteva.com>
+
+	* libc/machine/epiphany/machine/epiphany-asm.h: New file.
+	* libc/include/machine/setjmp.h: Add comment about likely
+	ABI change for epiphany.
+	* libc/machine/epiphany/setjmp.S: Use SYM() for defining C
+	exported function names.
+
 2012-01-19  Joern Rennecke  <joern.rennecke@embecosm.com>
 
 	* libc/machine/epiphany/access.c: Move to libgloss.

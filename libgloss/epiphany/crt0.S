@@ -26,6 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
+#include <machine/epiphany-asm.h>
 
 .section IVT_RESET,"a",@progbits     ;
         .global _start;
@@ -52,14 +53,15 @@ _start:
 
 .section .text;
 	.org    0x0000                  ; Relative to start of text section
-	.global _epiphany_start
-	.type   _epiphany_start, %function
-_epiphany_start:
+	.global SYM(_epiphany_start)
+	.type   SYM(_epiphany_start), %function
+SYM(_epiphany_start):
 
 	.align  4
 
 	;; Initialise the stack pointer and frame pointer. Hopefully __stack
 	;; is somewhere meaningful.
+	;; TODO: Everyone else have use __stack
 	mov	sp,%low(___stack)
 	movt	sp,%high(___stack)
 	;; Save replace for now incase overlay test fails
@@ -67,6 +69,7 @@ _epiphany_start:
 	mov fp, #0
 
 	;; Zero the data space
+	;; TODO: Everyone else have use __bss_start
 	mov	r0,%low(___bss_start)
 	movt	r0,%high(___bss_start)
 	mov	r1,%low(_end)
@@ -80,19 +83,23 @@ _epiphany_start:
 
 	;;  Setup destructors to be called from exit if main never returns
 #if 0
-	mov	r0,%low(fini)
-	movt	r0,%high(fini)
+	mov	r0,%low(SYM(_fini))
+	movt	r0,%high(SYM(_fini))
 	mov r2,%low(_atexit)
 	movt r2,%high(_atexit)
 	jalr r2
 #else
 	; calling atexit drags in malloc, so instead poke the function
 	; address directly into the reent structure
-	mov	r2,%low(__impure_ptr)
-	movt	r2,%high(__impure_ptr)
+	mov	r2,%low(SYM(_impure_ptr))
+	movt	r2,%high(SYM(_impure_ptr))
 	ldr	r2,[r2]
-	mov	r1,%low(fini)
-	movt	r1,%high(fini)
+	mov	r1,%low(SYM(_fini))
+	movt	r1,%high(SYM(_fini))
+
+	;; TODO: These hard coded offsets are fragile. It would be better to
+	;; generate a header file w/ the offsets as defines.
+
 #ifdef __STRUCT_ALIGN_64__
 #error
 	add	r2,r2,need_to_find_out; &_GLOBAL_REENT->atexit0
@@ -108,8 +115,8 @@ _epiphany_start:
 #endif /* !__STRUCT_ALIGN_64__ */
 #endif /* !0 */
 	;; Call global and static constructors
-	mov r2,%low(init)
-	movt r2,%high(init)
+	mov r2,%low(SYM(_init))
+	movt r2,%high(SYM(_init))
 	jalr r2
 
 	;;mask all Interrupts
@@ -127,18 +134,18 @@ RDS:
 	mov	r0,#0
 	mov	r1,#0
 	mov	r2,#0
-	mov r3,%low(_main)
-	movt r3,%high(_main)
+	mov r3,%low(SYM(main))
+	movt r3,%high(SYM(main))
 	jalr r3
 	;;bl	_main
 
 	;; Call exit
-	mov r3,%low(_exit)
-	movt r3,%high(_exit)
+	mov r3,%low(SYM(exit))
+	movt r3,%high(SYM(exit))
 	jalr r3
 	;;bl	_exit
 
 	;; Should never reach here
 	idle
 
-.size   _epiphany_start, .-_epiphany_start
+.size   SYM(_epiphany_start), .-SYM(_epiphany_start)
