@@ -1,5 +1,12 @@
 2015-09-03  Ola Jeppsson  <ola@adapteva.com>
 
+	* epiphany/Makefile.in: Add rule for epiphany-asm-offsets.h
+	* epiphany/crt0.S: Don't use hard coded struct offsets.
+	* epiphany/epiphany-asm-offsets.c: Make output parser-friendly.
+	Fix compiler warnings.
+
+2015-09-03  Ola Jeppsson  <ola@adapteva.com>
+
 	* epiphany/_exit.S: Use SYM() to define C exported function
 	names.
 	* epiphany/crt0.S: Likewise. Add underscore to _epiphany_start()

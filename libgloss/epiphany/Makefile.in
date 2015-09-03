@@ -172,10 +172,17 @@ libepiphany.a: $(SIMOBJS)
 _exit.o: _exit.S
 	$(CC) $(CFLAGS_FOR_TARGET) $(INCLUDES) $(CFLAGS) -c $<
 
+epiphany-asm-offsets.h: epiphany-asm-offsets.c
+	$(CC) $(CFLAGS_FOR_TARGET) $(INCLUDES) $(CFLAGS) -S $< -o- | \
+		grep "^#define" > $@
+
+$(OUTPUTS): epiphany-asm-offsets.h
+
 doc:
 
 clean mostlyclean:
-	rm -f $(OUTPUTS) *.i *~ *.o *-test *.srec *.dis *.map *.x
+	rm -f $(OUTPUTS) *.i *~ *.o *-test *.srec *.dis *.map *.x \
+		epiphany-asm-offsets.h
 
 distclean maintainer-clean realclean: clean
 	rm -f Makefile config.status $(OUTPUTS)

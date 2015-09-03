@@ -27,6 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 #include <machine/epiphany-asm.h>
+#include "epiphany-asm-offsets.h"
 
 .section IVT_RESET,"a",@progbits     ;
         .global _start;
@@ -96,23 +97,16 @@ SYM(_epiphany_start):
 	ldr	r2,[r2]
 	mov	r1,%low(SYM(_fini))
 	movt	r1,%high(SYM(_fini))
-
-	;; TODO: These hard coded offsets are fragile. It would be better to
-	;; generate a header file w/ the offsets as defines.
-
-#ifdef __STRUCT_ALIGN_64__
-#error
-	add	r2,r2,need_to_find_out; &_GLOBAL_REENT->atexit0
-	str	r2, [r2,-1];??or -2?; _GLOBAL_REENT->atexit
+	add	r3, r2, offsetof__reent__atexit0
+	add	r0, r2, offsetof__reent__atexit
+	str	r3, [r0]
 	mov	r0, 1
-	str	r0, [r2,1]	; _GLOBAL_REENT->atexit0._ind
-	str	r1, [r2,2]	; _GLOBAL_REENT->atexit0._fns[0]
-#else  /* !__STRUCT_ALIGN_64__ */
-	add	r0,r2,0x14c	; &_GLOBAL_REENT->atexit0
-	str	r0, [r0,-1]	; _GLOBAL_REENT->atexit
-	mov	r0, 1
-	strd	r0, [r2,0x2a]	; _GLOBAL_REENT->atexit0._ind
-#endif /* !__STRUCT_ALIGN_64__ */
+	mov	r2, r3
+	add	r3, r2, offsetof__atexit__ind
+	str	r0, [r3]
+	add	r3, r2, offsetof__atexit__fns
+	str	r1, [r3]
+
 #endif /* !0 */
 	;; Call global and static constructors
 	mov r2,%low(SYM(_init))
