@@ -30,7 +30,8 @@
 
 #include <sys/types.h>
 #include "epiphany-syscalls.h"
-#include "syscall.h"
+#include <syscall.h>
+#include "epiphany-syscalls.h"
 
 /* ------------------------------------------------------------------------- */
 /*!Read a file
@@ -45,5 +46,5 @@
 ssize_t __attribute__ ((section ("libgloss_epiphany")))
 _read (int fildes, void *ptr, size_t len)
 {
-  return asm_syscall (fildes, ptr, len, SYS_read);
+  return ASM_SYSCALL (fildes, ptr, len, SYS_read);
 }	/* _read () */

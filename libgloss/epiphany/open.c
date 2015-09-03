@@ -31,7 +31,8 @@
 
 #include <sys/types.h>
 #include "epiphany-syscalls.h"
-#include "syscall.h"
+#include <syscall.h>
+#include "epiphany-syscalls.h"
 
 /* ------------------------------------------------------------------------- */
 /*!Open a file
@@ -45,5 +46,5 @@
 int __attribute__ ((section ("libgloss_epiphany")))
 _open (const char *file, int flags, mode_t mode)
 {
-  return asm_syscall (file, flags, mode, SYS_open);
+  return ASM_SYSCALL (file, flags, mode, SYS_open);
 }	/* _open () */

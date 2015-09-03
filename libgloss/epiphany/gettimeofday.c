@@ -33,11 +33,13 @@
 #undef errno
 extern int errno;
 
+#include <stddef.h>
 #include <sys/time.h>
-#include "syscall.h"
+#include <syscall.h>
+#include "epiphany-syscalls.h"
 
 int
 _gettimeofday (struct timeval *tp, void *tzp)
 {
-  return asm_syscall (tp, tzp, NULL, SYS_gettimeofday);
+  return ASM_SYSCALL (tp, tzp, NULL, SYS_gettimeofday);
 }

@@ -31,6 +31,7 @@
 
 #include <sys/stat.h>
 #include <syscall.h>
+#include "epiphany-syscalls.h"
 
 
 /* ------------------------------------------------------------------------- */
@@ -44,5 +45,5 @@
 int __attribute__ ((section ("libgloss_epiphany")))
 _stat (const char  *file, struct stat *st)
 {
-  return asm_syscall (file, st, NULL, SYS_stat);
+  return ASM_SYSCALL (file, st, NULL, SYS_stat);
 }	/* _stat () */

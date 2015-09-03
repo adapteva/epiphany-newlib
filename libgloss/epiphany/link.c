@@ -31,6 +31,7 @@
 
 #include <unistd.h>
 #include <syscall.h>
+#include "epiphany-syscalls.h"
 
 
 /* ------------------------------------------------------------------------- */
@@ -48,6 +49,6 @@
 int __attribute__ ((section ("libgloss_epiphany")))
 _link (const char *old, const char *new)
 {
-  return asm_syscall (old, new, NULL, SYS_link);
+  return ASM_SYSCALL (old, new, NULL, SYS_link);
 
 }	/* _link () */

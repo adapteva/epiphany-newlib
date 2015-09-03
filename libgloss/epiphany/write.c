@@ -30,7 +30,8 @@
 
 #include <sys/types.h>
 #include "epiphany-syscalls.h"
-#include "syscall.h"
+#include <syscall.h>
+#include "epiphany-syscalls.h"
 
 
 /* ------------------------------------------------------------------------- */
@@ -48,5 +49,5 @@
 ssize_t __attribute__ ((section ("libgloss_epiphany")))
 _write (int file, const void *ptr, size_t len)
 {
-  return asm_syscall (file, ptr, len, SYS_write);
+  return ASM_SYSCALL (file, ptr, len, SYS_write);
 }	/* _write () */

@@ -31,6 +31,7 @@
 
 #include <unistd.h>
 #include <syscall.h>
+#include "epiphany-syscalls.h"
 
 
 /* ------------------------------------------------------------------------- */
@@ -47,7 +48,7 @@
 int __attribute__ ((section ("libgloss_epiphany")))
 _unlink (const char *name)
 {
-  return asm_syscall (name, NULL, NULL, SYS_unlink);
+  return ASM_SYSCALL (name, NULL, NULL, SYS_unlink);
 
 
 }	/* _unlink () */

@@ -1,5 +1,19 @@
 2015-09-03  Ola Jeppsson  <ola@adapteva.com>
 
+	* epiphany/epiphany-syscalls.h: Add ASM_SYSCALL macro that casts
+	arguments to the right type for asm_syscall.
+	* epiphany/fstat.c (_fstat): Use ASM_SYSCALL
+	* epiphany/gettimeofday.c (_gettimeofday): Likewise.
+	* epiphany/link.c (_link): Likewise.
+	* epiphany/lseek.c (_lseek): Likewise.
+	* epiphany/open.c (_open): Likewise.
+	* epiphany/read.c (_read): Likewise.
+	* epiphany/stat.c (_stat): Likewise.
+	* epiphany/unlink.c (_unlink): Likewise.
+	* epiphany/write.c (_write): Likewise.
+
+2015-09-03  Ola Jeppsson  <ola@adapteva.com>
+
 	* epiphany/Makefile.in (NEWLIB_CFLAGS, NEWLIB_LDFLAGS,
 	CFLAGS_FOR_TARGET, LDFLAGS_FOR_TARGET,
 	AR_FLAGS, .c.o, .C.o, .s.o, .S.o, .c.s): Delete and replace

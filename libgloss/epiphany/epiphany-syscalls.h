@@ -36,4 +36,7 @@ void asm_exit(int STATUS);
 int asm_close(int CHAN);
 int asm_syscall(void *P1, void *P2, void *P3, int SUBFUN);
 
+#define ASM_SYSCALL(P1, P2, P3, SUBFUN) \
+  asm_syscall ((void *) (P1), (void *) (P2), (void *) (P3), (int) (SUBFUN))
+
 #endif

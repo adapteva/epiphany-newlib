@@ -29,6 +29,7 @@
    POSSIBILITY OF SUCH DAMAGE.                                               */
 
 #include <syscall.h>
+#include "epiphany-syscalls.h"
 #include <sys/types.h>
 
 /* ------------------------------------------------------------------------- */
@@ -43,5 +44,5 @@
 off_t __attribute__ ((section ("libgloss_epiphany")))
 _lseek (int  fildes, off_t offset, int  whence)
 {
-  return asm_syscall (fildes, offset, whence, SYS_lseek);
+  return ASM_SYSCALL (fildes, offset, whence, SYS_lseek);
 }	/* _lseek () */
