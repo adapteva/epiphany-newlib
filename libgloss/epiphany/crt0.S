@@ -29,6 +29,10 @@
 #include <machine/epiphany-asm.h>
 #include "epiphany-asm-offsets.h"
 
+// TODO: These should be defined in common header file
+#define LOADER_BSS_CLEARED_FLAG 1
+#define LOADER_CUSTOM_ARGS_FLAG 2
+
 .macro	movw	rd,constant
 	mov	\rd,%low(\constant)
 	movt	\rd,%high(\constant)
@@ -38,10 +42,40 @@
         .global _start;
         .type   _start, %function;
 _start:
-		.balign 4 ;
-         b .normal_start
+	.balign 4
+	b .normal_start
 
 .size  _start, .-_start
+
+
+.section .data
+
+.weak	SYM(__loader_flags)
+.type	SYM(__loader_flags), @object
+.balign 8
+SYM(__loader_flags):
+	.word	0
+.size  SYM(__loader_flags), .-SYM(__loader_flags)
+
+.weak	SYM(__loader_args_ptr)
+.type	SYM(__loader_args_ptr), @object
+.balign 8
+SYM(__loader_args_ptr):
+	.word	0
+.size  SYM(__loader_args_ptr), .-SYM(__loader_args_ptr)
+
+;; structure
+;;	.word	0 ;; r0
+;;	.word	0 ;; r1
+;;	.word	0 ;; r2
+;;	.word	0 ;; r3
+;;	.word	SYM(main) ;; function
+;;	.word	0 ;; upper 32 bits
+;;	.word	0 ;; stack spill size (8-byte aligned)
+;;	.word	0 ;; __pad
+;;	.word	0 ;; stack spill ptr  (8-byte aligned)
+;;	.word	0 ;; upper 32 bits
+;;	TODO: Need to store return value
 
 .section RESERVED_CRT0,"a",@progbits     ;
 
@@ -51,9 +85,8 @@ _start:
 .balign 4
 .type   .normal_start, %function
 .normal_start:
-	mov  r3,%low(_epiphany_start)
-	movt r3,%high(_epiphany_start)
-	jalr r3
+	movw	r3, _epiphany_start
+	jalr	r3
 .size  .normal_start, .-.normal_start
 
 
@@ -70,77 +103,113 @@ SYM(_epiphany_start):
 	movw	sp,__stack
 	;; Save replace for now incase overlay test fails
 	;; 	mov	fp,sp
-	mov fp, #0
+	mov	fp, #0
 
-	;; Zero the data space
-	;; TODO: Everyone else have use __bss_start
-	mov	r0,%low(___bss_start)
-	movt	r0,%high(___bss_start)
-	mov	r1,%low(_end)
-	movt	r1,%high(_end)
+	;; Check if we need to zero the data space. This is racy so normally the
+	;; loader should do it.
+	movw	r0,SYM(__loader_flags)
+	ldr	r0,[r0]
+	movw	r1,#LOADER_BSS_CLEARED_FLAG
+	and	r0,r0,r1
+	bne	bss_done
+
+	movw	r0,__bss_start
+	movw	r1,_end
 	mov	r2,#0
 	mov	r3,#0
-.L0_init_:
+
+	sub	r5,r1,r0
+	blte	bss_done
+
+bss_loop:
 	strd	r2,[r0],+#1
 	sub	r5,r1,r0
-	bne	.L0_init_
+	bgt	bss_loop
+bss_done:
 
 	;;  Setup destructors to be called from exit if main never returns
 #if 0
-	mov	r0,%low(SYM(_fini))
-	movt	r0,%high(SYM(_fini))
-	mov r2,%low(_atexit)
-	movt r2,%high(_atexit)
+	movw	r0,SYM(_fini)
+	movw	r2,_atexit
 	jalr r2
 #else
 	; calling atexit drags in malloc, so instead poke the function
 	; address directly into the reent structure
-	mov	r2,%low(SYM(_impure_ptr))
-	movt	r2,%high(SYM(_impure_ptr))
+	movw	r2,SYM(_impure_ptr)
 	ldr	r2,[r2]
-	mov	r1,%low(SYM(_fini))
-	movt	r1,%high(SYM(_fini))
-	add	r3, r2, offsetof__reent__atexit0
-	add	r0, r2, offsetof__reent__atexit
-	str	r3, [r0]
-	mov	r0, 1
-	mov	r2, r3
-	add	r3, r2, offsetof__atexit__ind
-	str	r0, [r3]
-	add	r3, r2, offsetof__atexit__fns
-	str	r1, [r3]
-
+	movw	r1,SYM(_fini)
+	add	r3,r2,#offsetof__reent__atexit0
+	add	r0,r2,#offsetof__reent__atexit
+	str	r3,[r0]
+	mov	r0,#1
+	mov	r2,r3
+	add	r3,r2,#offsetof__atexit__ind
+	str	r0,[r3]
+	add	r3,r2,#offsetof__atexit__fns
+	str	r1,[r3]
 #endif /* !0 */
-	;; Call global and static constructors
-	mov r2,%low(SYM(_init))
-	movt r2,%high(SYM(_init))
-	jalr r2
 
-	;;mask all Interrupts
-	mov R0,#0xfffe
-	movts IMASK,R0
+	;;mask all interrupts except sync
+	mov	r0,#0xfffe
+	movts	imask,r0
 
 	;;return from reset ISR
-	mov R0,%low(RDS)
-	movt R0,%high(RDS)
-	movts iret,r0
+	movw	r0,RDS
+	movts	iret,r0
 	rti
 RDS:
 
+	;; Call global and static constructors
+	movw	r2,SYM(_init)
+	jalr	r2
+
+	;; Check if the loader has custom args
+	movw	r0,SYM(__loader_flags)
+	ldr	r0,[r0]
+	movw	r1,#LOADER_CUSTOM_ARGS_FLAG
+	and	r0,r0,r1
+	beq	std_call
+custom_call:
+	movw	r8,SYM(__loader_args_ptr)
+	ldr	r8,[r8]
+	ldr	r0,[r8],+#1 ;; r0
+	ldr	r1,[r8],+#1 ;; r1
+	ldr	r2,[r8],+#1 ;; r2
+	ldr	r3,[r8],+#1 ;; r3
+	ldr	r4,[r8],+#1 ;; function ptr
+	add	r8,r8,#4    ;;     upper 32 bits
+	ldr	r5,[r8],+#1 ;; stack spill size (8-byte aligned)
+	add	r8,r8,#4    ;;     padding (reserved, must be 0)
+	ldr	r6,[r8],+#1 ;; stack spill ptr  (8-byte aligned)
+	add	r8,r8,#4    ;;     upper 32 bits
+
+	sub	r5,r5,#0
+	beq	go
+	sub	sp,sp,r5
+	mov	r7,sp
+	sub	sp,sp,#8 ;; ???: seem right
+stack_args_loop:
+	ldrd	r8,[r6],+#1
+	sub	r5,r5,#8
+	strd	r8,[r7],+#1
+	bgt	stack_args_loop
+	b go
+
+std_call:
 	;;  Initialise argc, argv and envp to empty and call main
 	mov	r0,#0
 	mov	r1,#0
 	mov	r2,#0
-	mov r3,%low(SYM(main))
-	movt r3,%high(SYM(main))
-	jalr r3
+	mov	r3,#0
+	movw	r4,SYM(main)
+go:
+	jalr	r4
 	;;bl	_main
 
 	;; Call exit
-	mov r3,%low(SYM(exit))
-	movt r3,%high(SYM(exit))
-	jalr r3
-	;;bl	_exit
+	movw	r4,SYM(exit)
+	jalr	r4
+	;;bl	SYM(exit)
 
 	;; Should never reach here
 	idle

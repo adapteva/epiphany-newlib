@@ -1,5 +1,10 @@
 2015-09-22  Ola Jeppsson  <ola@adapteva.com>
 
+	* libgloss/epiphany/crt0.S: Support custom function and
+	arguments.
+
+2015-09-22  Ola Jeppsson  <ola@adapteva.com>
+
 	* libgloss/epiphany/crt0.S: Use __stack instead of ___stack.
 	Add movw helper macro.
 
