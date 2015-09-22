@@ -1,3 +1,8 @@
+2015-09-22  Ola Jeppsson  <ola@adapteva.com>
+
+	* libgloss/epiphany/crt0.S: Use __stack instead of ___stack.
+	Add movw helper macro.
+
 2015-09-03  Ola Jeppsson  <ola@adapteva.com>
 
 	* epiphany/epiphany-syscalls.h: Add ASM_SYSCALL macro that casts

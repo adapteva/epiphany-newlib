@@ -29,6 +29,11 @@
 #include <machine/epiphany-asm.h>
 #include "epiphany-asm-offsets.h"
 
+.macro	movw	rd,constant
+	mov	\rd,%low(\constant)
+	movt	\rd,%high(\constant)
+.endm
+
 .section IVT_RESET,"a",@progbits     ;
         .global _start;
         .type   _start, %function;
@@ -62,9 +67,7 @@ SYM(_epiphany_start):
 
 	;; Initialise the stack pointer and frame pointer. Hopefully __stack
 	;; is somewhere meaningful.
-	;; TODO: Everyone else have use __stack
-	mov	sp,%low(___stack)
-	movt	sp,%high(___stack)
+	movw	sp,__stack
 	;; Save replace for now incase overlay test fails
 	;; 	mov	fp,sp
 	mov fp, #0
