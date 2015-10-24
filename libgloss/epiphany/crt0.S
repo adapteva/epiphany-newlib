@@ -38,17 +38,8 @@
 	movt	\rd,%high(\constant)
 .endm
 
-.section IVT_RESET,"a",@progbits     ;
-        .global _start;
-        .type   _start, %function;
-_start:
-	.balign 4
-	b .normal_start
-
-.size  _start, .-_start
-
-
-.section .data
+.data
+.section RESERVED_CRT0_DATA
 
 .weak	SYM(__loader_flags)
 .type	SYM(__loader_flags), @object
@@ -77,26 +68,32 @@ SYM(__loader_args_ptr):
 ;;	.word	0 ;; upper 32 bits
 ;;	TODO: Need to store return value
 
+.text
+.section IVT_RESET,"a",@progbits     ;
+        .global _start;
+        .type   _start, %function;
+_start:
+	b.l	_normal_start
+
+.size  _start, .-_start
+
+
 .section RESERVED_CRT0,"a",@progbits     ;
 
 #The "main" C caller can be located in the externa memory
 #  _epiphany_start should be called by register to avoid linker problem
-.global .normal_start;
 .balign 4
-.type   .normal_start, %function
-.normal_start:
+.type   _normal_start, %function
+_normal_start:
 	movw	r3, _epiphany_start
 	jalr	r3
-.size  .normal_start, .-.normal_start
+.size  _normal_start, .-_normal_start
 
 
 .section .text;
-	.org    0x0000                  ; Relative to start of text section
-	.global SYM(_epiphany_start)
 	.type   SYM(_epiphany_start), %function
+	.balign  8
 SYM(_epiphany_start):
-
-	.align  4
 
 	;; Initialise the stack pointer and frame pointer. Hopefully __stack
 	;; is somewhere meaningful.
@@ -118,12 +115,12 @@ SYM(_epiphany_start):
 	mov	r2,#0
 	mov	r3,#0
 
-	sub	r5,r1,r0
+	sub	r4,r1,r0
 	blte	bss_done
 
 bss_loop:
 	strd	r2,[r0],+#1
-	sub	r5,r1,r0
+	sub	r4,r1,r0
 	bgt	bss_loop
 bss_done:
 

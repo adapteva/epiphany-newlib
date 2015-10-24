@@ -1,3 +1,10 @@
+2015-10-24  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany/crt0.S: Move data to top of file. Use
+	RESERVED_CRT0_DATA section for crt0 data.
+	(_normal_start): Rename from .normal_start. Don't make global.
+	Increase to dword alignment.
+
 2015-09-22  Ola Jeppsson  <ola@adapteva.com>
 
 	* libgloss/epiphany/crt0.S: Support custom function and
