@@ -91,6 +91,7 @@ _normal_start:
 
 
 .section .text;
+        .global SYM(_epiphany_start);
 	.type   SYM(_epiphany_start), %function
 	.balign  8
 SYM(_epiphany_start):

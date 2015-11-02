@@ -1,3 +1,7 @@
+2015-11-02  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany/crt0.S (_epiphany_start): Make global.
+
 2015-10-24  Ola Jeppsson  <ola@adapteva.com>
 
 	* epiphany/crt0.S: Move data to top of file. Use
