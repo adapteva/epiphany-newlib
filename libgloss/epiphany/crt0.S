@@ -39,7 +39,7 @@
 .endm
 
 .data
-.section RESERVED_CRT0_DATA
+.section loader_cfg
 
 .weak	SYM(__loader_flags)
 .type	SYM(__loader_flags), @object

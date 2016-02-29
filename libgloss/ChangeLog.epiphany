@@ -1,3 +1,9 @@
+2016-02-29  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany/crt0.S (__loader_flags): Move to
+	loader_cfg section.
+	(__loader_args_ptr): Likewise.
+
 2015-11-02  Ola Jeppsson  <ola@adapteva.com>
 
 	* epiphany/crt0.S (_epiphany_start): Make global.
