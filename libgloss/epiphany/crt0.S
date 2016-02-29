@@ -78,32 +78,6 @@ _start:
 .size  _start, .-_start
 
 
-;; Provide safe overridable IVT entries
-.macro	mkivtdummy	section,name
-	.section \section,"a",@progbits
-	.balign 4
-	.weak \name
-	.type \name, %function
-\name:
-	trap	#5 ;; TRAP_FAIL
-	idle
-	b.s	\name
-	b.s	\name
-	.size	\name, .-\name
-.endm
-
-;;mkivtentry ivt_entry_reset,		,__ivt_reset_dummy
-mkivtdummy ivt_entry_software_exception	,__ivt_software_exception_dummy
-mkivtdummy ivt_entry_page_miss		,__ivt_page_miss_dummy
-mkivtdummy ivt_entry_timer0		,__ivt_timer0_dummy
-mkivtdummy ivt_entry_timer1		,__ivt_timer1_dummy
-mkivtdummy ivt_entry_message		,__ivt_message_dummy
-mkivtdummy ivt_entry_dma0		,__ivt_dma0_dummy
-mkivtdummy ivt_entry_dma1		,__ivt_dma1_dummy
-mkivtdummy ivt_entry_wand		,__ivt_wand_dummy
-mkivtdummy ivt_entry_user		,__ivt_user_dummy
-
-
 .section RESERVED_CRT0,"a",@progbits     ;
 
 #The "main" C caller can be located in the externa memory
