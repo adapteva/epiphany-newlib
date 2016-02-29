@@ -35,4 +35,6 @@
 SYM(_exit):
 	;; TODO: idle instead of trap on metal?
 	trap    #3              ; exit
-	b SYM(_exit)
+1:
+	idle
+	b 1b
