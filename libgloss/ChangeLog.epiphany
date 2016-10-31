@@ -1,5 +1,12 @@
 2016-10-31  Ola Jeppsson  <ola@adapteva.com>
 
+	* epiphany/crt0.S (.section loader_cfg): Fix flags.
+	(__loader_flags) (__loader_args_ptr): Make global.
+	(.section IVT_RESET) (.section RESERVED_CRT0): Add executable
+	flag.
+
+2016-10-31  Ola Jeppsson  <ola@adapteva.com>
+
 	* epiphany/cachemanager.S (cacheman) (countedcall): Don't make
 	global.
 

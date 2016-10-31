@@ -39,16 +39,16 @@
 .endm
 
 .data
-.section loader_cfg
+.section loader_cfg,"aw",@progbits
 
-.weak	SYM(__loader_flags)
+.global	SYM(__loader_flags)
 .type	SYM(__loader_flags), @object
 .balign 8
 SYM(__loader_flags):
 	.word	0
 .size  SYM(__loader_flags), .-SYM(__loader_flags)
 
-.weak	SYM(__loader_args_ptr)
+.global	SYM(__loader_args_ptr)
 .type	SYM(__loader_args_ptr), @object
 .balign 8
 SYM(__loader_args_ptr):
@@ -69,7 +69,7 @@ SYM(__loader_args_ptr):
 ;;	TODO: Need to store return value
 
 .text
-.section IVT_RESET,"a",@progbits     ;
+.section IVT_RESET,"ax",@progbits     ;
         .global _start;
         .type   _start, %function;
 _start:
@@ -78,7 +78,7 @@ _start:
 .size  _start, .-_start
 
 
-.section RESERVED_CRT0,"a",@progbits     ;
+.section RESERVED_CRT0,"ax",@progbits     ;
 
 #The "main" C caller can be located in the externa memory
 #  _epiphany_start should be called by register to avoid linker problem
