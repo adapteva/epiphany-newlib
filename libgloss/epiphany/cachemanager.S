@@ -233,7 +233,6 @@
 
 	.section .cacheman,"ax",@progbits
 	.balign 4
-	.global cacheman
 	.type cacheman, @function
 cacheman:
 	mov r17, %low(__cache_stack)
@@ -500,7 +499,6 @@ cacheman:
 	;; Branch to second iteration
 	b .cachebegin
 
-        .global countedcall
 countedcall:
 	mov r17, %low(__cache_stack)
 	movt r17, %high(__cache_stack)

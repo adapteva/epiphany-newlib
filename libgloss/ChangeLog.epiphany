@@ -1,3 +1,8 @@
+2016-10-31  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany/cachemanager.S (cacheman) (countedcall): Don't make
+	global.
+
 2016-02-29  Ola Jeppsson  <ola@adapteva.com>
 
 	* epiphany/_exit.S (_exit): Modify exit loop to only trap
