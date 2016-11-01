@@ -34,7 +34,6 @@
 	.global		SYM(_exit)
 SYM(_exit):
 	;; TODO: idle instead of trap on metal?
-	trap    #3              ; exit
 1:
-	idle
+	trap    #3              ; exit
 	b 1b
