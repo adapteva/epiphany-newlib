@@ -32,6 +32,7 @@
 // TODO: These should be defined in common header file
 #define LOADER_BSS_CLEARED_FLAG 1
 #define LOADER_CUSTOM_ARGS_FLAG 2
+#define LOADER_ARGV_IN_SP_FLAG  4
 
 .macro	movw	rd,constant
 	mov	\rd,%low(\constant)
@@ -96,19 +97,27 @@ _normal_start:
 	.balign  8
 SYM(_epiphany_start):
 
+	;; Store loader flags in r16
+	movw	r16,SYM(__loader_flags)
+	ldr	r16,[r16]
+
+	;; If LOADER_ARGV_IN_SP_FLAG, then the loader has already configured sp
+	mov	r0,#LOADER_ARGV_IN_SP_FLAG
+	and	r0,r0,r16
+	bne	1f
+
 	;; Initialise the stack pointer and frame pointer. Hopefully __stack
 	;; is somewhere meaningful.
 	movw	sp,__stack
 	;; Save replace for now incase overlay test fails
 	;; 	mov	fp,sp
+1:
 	mov	fp, #0
 
 	;; Check if we need to zero the data space. This is racy so normally the
 	;; loader should do it.
-	movw	r0,SYM(__loader_flags)
-	ldr	r0,[r0]
-	movw	r1,#LOADER_BSS_CLEARED_FLAG
-	and	r0,r0,r1
+	mov	r0,#LOADER_BSS_CLEARED_FLAG
+	and	r0,r0,r16
 	bne	bss_done
 
 	movw	r0,__bss_start
@@ -162,11 +171,13 @@ RDS:
 	jalr	r2
 
 	;; Check if the loader has custom args
-	movw	r0,SYM(__loader_flags)
-	ldr	r0,[r0]
-	movw	r1,#LOADER_CUSTOM_ARGS_FLAG
-	and	r0,r0,r1
-	beq	std_call
+	mov	r0,#LOADER_CUSTOM_ARGS_FLAG
+	and	r0,r0,r16
+	bne	custom_call
+	mov	r0,#LOADER_ARGV_IN_SP_FLAG
+	and	r0,r0,r16
+	bne	argv_in_sp
+	b	std_call
 custom_call:
 	movw	r8,SYM(__loader_args_ptr)
 	ldr	r8,[r8]
@@ -193,12 +204,19 @@ stack_args_loop:
 	bgt	stack_args_loop
 	b go
 
+argv_in_sp:
+	;; arguments are actually at sp+8
+	ldrd	r0,[sp,#1] ;; argc, argv
+	ldrd	r2,[sp,#2] ;; envp, auxv
+	b	1f
+
 std_call:
 	;;  Initialise argc, argv and envp to empty and call main
-	mov	r0,#0
-	mov	r1,#0
-	mov	r2,#0
-	mov	r3,#0
+	mov	r0,#0 ;; argc
+	mov	r1,#0 ;; argv
+	mov	r2,#0 ;; envp
+	mov	r3,#0 ;; auxv
+1:
 	movw	r4,SYM(main)
 go:
 	jalr	r4
