@@ -240,6 +240,10 @@
 #define _REENT_GLOBAL_ATEXIT
 #endif
 
+#if defined(__epiphany__)
+#define _READ_WRITE_RETURN_TYPE _ssize_t
+#endif
+
 #ifndef __EXPORT
 #define __EXPORT
 #endif

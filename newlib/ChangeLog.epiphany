@@ -1,3 +1,9 @@
+2016-11-17  Ola Jeppsson  <ola@adapteva.com>
+
+	* libc/include/sys/config.h[__epiphany__]: Set
+	_READ_WRITE_RETURN_TYPE to _ssize_t to be POSIX compliant, and
+	match underlying code in libgloss.
+
 2015-09-03  Ola Jeppsson  <ola@adapteva.com>
 
 	* libc/machine/epiphany/machine/epiphany-asm.h: New file.
