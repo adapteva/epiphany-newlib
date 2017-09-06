@@ -1,3 +1,8 @@
+2017-09-06  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany/crt0.S: Store __loader_flags in
+	callee-saved r10 instead of caller-saved r16.
+
 2016-11-16  Ola Jeppsson  <ola@adapteva.com>
 
 	* epiphany/crt0.S (LOADER_ARGV_IN_SP_FLAG): Add loader flag.

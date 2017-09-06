@@ -97,13 +97,13 @@ _normal_start:
 	.balign  8
 SYM(_epiphany_start):
 
-	;; Store loader flags in r16
-	movw	r16,SYM(__loader_flags)
-	ldr	r16,[r16]
+	;; Store loader flags in r10
+	movw	r10,SYM(__loader_flags)
+	ldr	r10,[r10]
 
 	;; If LOADER_ARGV_IN_SP_FLAG, then the loader has already configured sp
 	mov	r0,#LOADER_ARGV_IN_SP_FLAG
-	and	r0,r0,r16
+	and	r0,r0,r10
 	bne	1f
 
 	;; Initialise the stack pointer and frame pointer. Hopefully __stack
@@ -117,7 +117,7 @@ SYM(_epiphany_start):
 	;; Check if we need to zero the data space. This is racy so normally the
 	;; loader should do it.
 	mov	r0,#LOADER_BSS_CLEARED_FLAG
-	and	r0,r0,r16
+	and	r0,r0,r10
 	bne	bss_done
 
 	movw	r0,__bss_start
@@ -172,10 +172,10 @@ RDS:
 
 	;; Check if the loader has custom args
 	mov	r0,#LOADER_CUSTOM_ARGS_FLAG
-	and	r0,r0,r16
+	and	r0,r0,r10
 	bne	custom_call
 	mov	r0,#LOADER_ARGV_IN_SP_FLAG
-	and	r0,r0,r16
+	and	r0,r0,r10
 	bne	argv_in_sp
 	b	std_call
 custom_call:
