@@ -1,3 +1,10 @@
+2017-10-09  Ola Jeppsson  <ola@adapteva.com>
+
+	* libc/machine/epiphany/Makefile.am (lib_a_SOURCES):
+	Add memcpy.S
+	* libc/machine/epiphany/Makefile.in: Regenerate.
+	* libc/machine/epiphany/memcpy.S: New file.
+
 2016-11-17  Ola Jeppsson  <ola@adapteva.com>
 
 	* libc/include/sys/config.h[__epiphany__]: Set
