@@ -233,8 +233,9 @@
 
 	.section .cacheman,"ax",@progbits
 	.balign 4
-	.type cacheman, @function
-cacheman:
+	.type __cacheman, @function
+	.global __cacheman
+__cacheman:
 	mov r17, %low(__cache_stack)
 	movt r17, %high(__cache_stack)
         ldr r16, [r17]
@@ -482,8 +483,8 @@ cacheman:
 
     ;; Calculate and write new PLT
     sub r56, r56, #4
-    mov r57, %low(cacheman)
-    movt r57, %high(cacheman)
+    mov r57, %low(__cacheman)
+    movt r57, %high(__cacheman)
     sub r57, r57, r56
     lsr r57, r57, #1
     lsl r57, r57, #8
@@ -549,7 +550,7 @@ countedcall:
         sub r50, r50, #1
         str r50, [r55, #-4]
 	rts
-	.size  cacheman, .-cacheman
+	.size  __cacheman, .-__cacheman
 
 	.balign 8
 	.section .csp,"awx"
