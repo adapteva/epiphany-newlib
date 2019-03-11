@@ -35,7 +35,7 @@ _or1k_timer_interrupt_handler(void)
 	uint32_t ttmr = or1k_mfspr(OR1K_SPR_TICK_TTMR_ADDR);
 	ttmr = OR1K_SPR_TICK_TTMR_IE_SET(ttmr, 1);
 	ttmr = OR1K_SPR_TICK_TTMR_MODE_SET(ttmr, OR1K_SPR_TICK_TTMR_MODE_RESTART);
-	ttmr = OR1K_SPR_TICK_TTMR_IE_SET(ttmr, 1);
+	ttmr = OR1K_SPR_TICK_TTMR_IP_SET(ttmr, 0);
 	or1k_mtspr(OR1K_SPR_TICK_TTMR_ADDR, ttmr);
 }
 
@@ -140,7 +140,7 @@ void
 or1k_timer_restore(uint32_t sr_tee)
 {
 	uint32_t sr = or1k_mfspr(OR1K_SPR_SYS_SR_ADDR);
-	sr = OR1K_SPR_SYS_SR_TEE_SET(sr, 1);
+	sr = OR1K_SPR_SYS_SR_TEE_SET(sr, sr_tee);
 	or1k_mtspr(OR1K_SPR_SYS_SR_ADDR, sr);
 }
 

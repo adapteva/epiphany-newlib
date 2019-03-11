@@ -29,14 +29,33 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <math.h>
-#include "local.h"
+#include <errno.h>
+#include "fdlibm.h"
 
-/* On platforms where long double is as wide as double.  */
-#ifdef _LDBL_EQ_DBL
 long double
 hypotl (long double x, long double y)
 {
-  return hypot(x, y);
-}
-#endif
+#ifdef _LDBL_EQ_DBL
 
+  /* On platforms where long double is as wide as double.  */
+  return hypot(x, y);
+
+#else
+
+  long double z;
+
+  z = __ieee754_hypotl (x, y);
+
+  if (_LIB_VERSION == _IEEE_)
+    return z;
+
+  if ((! finitel (z)) && finitel (x) && finitel (y))
+    {
+      /* hypot (finite, finite) overflow.  */
+      errno = ERANGE;
+      return (long double) HUGE_VAL;
+    }
+
+  return z;
+#endif /* ! _LDBL_EQ_DBL */
+}

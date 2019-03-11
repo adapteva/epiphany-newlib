@@ -16,15 +16,14 @@
 #include "local.h"
 
 struct tm *
-_DEFUN (localtime_r, (tim_p, res),
-	_CONST time_t *__restrict tim_p _AND
+localtime_r (const time_t *__restrict tim_p,
 	struct tm *__restrict res)
 {
   long offset;
   int hours, mins, secs;
   int year;
-  __tzinfo_type *_CONST tz = __gettzinfo ();
-  _CONST int *ip;
+  __tzinfo_type *const tz = __gettzinfo ();
+  const int *ip;
 
   res = gmtime_r (tim_p, res);
 
@@ -32,6 +31,7 @@ _DEFUN (localtime_r, (tim_p, res),
   ip = __month_lengths[isleap(year)];
 
   TZ_LOCK;
+  _tzset_unlocked ();
   if (_daylight)
     {
       if (year == tz->__tzyear || __tzcalc_limits (year))

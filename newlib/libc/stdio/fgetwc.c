@@ -45,7 +45,7 @@ INDEX
 INDEX
 	_getwc_unlocked_r
 
-ANSI_SYNOPSIS
+SYNOPSIS
 	#include <stdio.h>
 	#include <wchar.h>
 	wint_t fgetwc(FILE *<[fp]>);
@@ -80,53 +80,6 @@ ANSI_SYNOPSIS
 	#include <wchar.h>
 	wint_t _getwc_unlocked_r(struct _reent *<[ptr]>, FILE *<[fp]>);
 
-TRAD_SYNOPSIS
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t fgetwc(<[fp]>)
-	FILE *<[fp]>;
-
-	#define _GNU_SOURCE
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t fgetwc_unlocked(<[fp]>)
-	FILE *<[fp]>;
-
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t _fgetwc_r(<[ptr]>, <[fp]>)
-	struct _reent *<[ptr]>;
-	FILE *<[fp]>;
-
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t _fgetwc_unlocked_r(<[ptr]>, <[fp]>)
-	struct _reent *<[ptr]>;
-	FILE *<[fp]>;
-
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t getwc(<[fp]>)
-	FILE *<[fp]>;
-
-	#define _GNU_SOURCE
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t getwc_unlocked(<[fp]>)
-	FILE *<[fp]>;
-
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t _getwc_r(<[ptr]>, <[fp]>)
-	struct _reent *<[ptr]>;
-	FILE *<[fp]>;
-
-	#include <stdio.h>
-	#include <wchar.h>
-	wint_t _getwc_unlocked_r(<[ptr]>, <[fp]>)
-	struct _reent *<[ptr]>;
-	FILE *<[fp]>;
-
 DESCRIPTION
 Use <<fgetwc>> to get the next wide character from the file or stream
 identified by <[fp]>.  As a side effect, <<fgetwc>> advances the file's
@@ -150,7 +103,7 @@ are simply reentrant versions of the above functions that are passed the
 additional reentrant structure pointer argument: <[ptr]>.
 
 RETURNS
-The next wide character cast to <<wint_t>>), unless there is no more data,
+The next wide character cast to <<wint_t>>, unless there is no more data,
 or the host system reports a read error; in either of these situations,
 <<fgetwc>> and <<getwc>> return <<WEOF>>.
 
@@ -172,8 +125,7 @@ PORTABILITY
 #include "local.h"
 
 wint_t
-_DEFUN(__fgetwc, (ptr, fp),
-	struct _reent *ptr _AND
+__fgetwc (struct _reent *ptr,
 	register FILE *fp)
 {
   wchar_t wc;
@@ -219,8 +171,7 @@ _DEFUN(__fgetwc, (ptr, fp),
 }
 
 wint_t
-_DEFUN(_fgetwc_r, (ptr, fp),
-	struct _reent *ptr _AND
+_fgetwc_r (struct _reent *ptr,
 	register FILE *fp)
 {
   wint_t r;
@@ -233,8 +184,7 @@ _DEFUN(_fgetwc_r, (ptr, fp),
 }
 
 wint_t
-_DEFUN(fgetwc, (fp),
-	FILE *fp)
+fgetwc (FILE *fp)
 {
   struct _reent *reent = _REENT;
 

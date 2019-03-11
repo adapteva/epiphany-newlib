@@ -14,24 +14,16 @@
 
 /*
 FUNCTION
-	<<exp10>>, <<exp10f>>---exponential
+	<<exp10>>, <<exp10f>>---exponential, base 10
 INDEX
 	exp10
 INDEX
 	exp10f
 
-ANSI_SYNOPSIS
+SYNOPSIS
 	#include <math.h>
 	double exp10(double <[x]>);
 	float exp10f(float <[x]>);
-
-TRAD_SYNOPSIS
-	#include <math.h>
-	double exp10(<[x]>);
-	double <[x]>;
-
-	float exp10f(<[x]>);
-	float <[x]>;
 
 DESCRIPTION
 	<<exp10>> and <<exp10f>> calculate 10 ^ <[x]>, that is, 
@@ -41,9 +33,6 @@ DESCRIPTION
 	@tex
 	$10^x$
 	@end tex
-
-	You can use the (non-ANSI) function <<matherr>> to specify
-	error handling for these functions.
 
 RETURNS
 	On success, <<exp10>> and <<exp10f>> return the calculated value.

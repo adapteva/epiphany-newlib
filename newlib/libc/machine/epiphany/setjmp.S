@@ -66,4 +66,4 @@ SYM(longjmp):
 	mov r0,#1
 	movne r0,r1
 	jr lr
-        .size   SYM(longjmp), .-SYM(longjmp)
+	.size   SYM(longjmp), .-SYM(longjmp)

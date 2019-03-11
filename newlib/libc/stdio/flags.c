@@ -30,9 +30,8 @@
  */
 
 int
-_DEFUN(__sflags, (ptr, mode, optr),
-       struct _reent *ptr  _AND
-       register char *mode _AND
+__sflags (struct _reent *ptr,
+       register char *mode,
        int *optr)
 {
   register int ret, m, o;
@@ -90,10 +89,6 @@ _DEFUN(__sflags, (ptr, mode, optr),
 	  break;
 	}
     }
-#if defined (O_TEXT) && !defined (__CYGWIN__)
-  if (!(m | O_BINARY))
-    m |= O_TEXT;
-#endif
   *optr = m | o;
   return ret;
 }

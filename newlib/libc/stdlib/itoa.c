@@ -5,13 +5,13 @@ FUNCTION
 INDEX
 	itoa
 
-ANSI_SYNOPSIS
+SYNOPSIS
 	#include <stdlib.h>
 	char *itoa(int <[value]>, char *<[str]>, int <[base]>);
 	char *__itoa(int <[value]>, char *<[str]>, int <[base]>);
 
 DESCRIPTION
-<<itoa>> converts the integer [<value>] to a null-terminated string
+<<itoa>> converts the integer <[value]> to a null-terminated string
 using the specified base, which must be between 2 and 36, inclusive.
 If <[base]> is 10, <[value]> is treated as signed and the string will be 
 prefixed with '-' if negative. For all other bases, <[value]> is treated as
@@ -30,9 +30,8 @@ No supporting OS subroutine calls are required.
 #include <stdlib.h>
 
 char *
-_DEFUN (__itoa, (value, str, base),
-        int value _AND
-        char *str _AND 
+__itoa (int value,
+        char *str,
         int base)
 {
   unsigned uvalue;
@@ -60,9 +59,8 @@ _DEFUN (__itoa, (value, str, base),
 }
 
 char *  
-_DEFUN (itoa, (value, str, base),
-        int value _AND
-        char *str _AND
+itoa (int value,
+        char *str,
         int base)
 {
   return __itoa (value, str, base);
